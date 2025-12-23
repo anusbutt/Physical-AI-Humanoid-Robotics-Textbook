@@ -1,0 +1,298 @@
+# Frontmatter Schema Contract
+
+# Feature: 002-sensors-perception
+# Purpose: Define YAML frontmatter schema for all Module 2 lesson files
+# Validation: All lessons MUST conform to this 13-field schema
+
+# Schema Version: 1.0 (inherited from Module 1)
+# Last Updated: 2025-12-07
+
+# =============================================================================
+# REQUIRED FIELDS (13 total - all mandatory, no optional fields)
+# =============================================================================
+
+# Field 1: title
+# Type: string
+# Constraints: Max 60 characters, descriptive, no special chars except hyphens/colons
+# Purpose: Docusaurus page title and H1 heading
+# Example: "Lesson 1: Camera Systems and Computer Vision"
+title: string
+
+# Field 2: sidebar_position
+# Type: integer
+# Constraints: 1-6 (01-04 lessons, 05 capstone, 06 quiz), unique within module
+# Purpose: Docusaurus sidebar ordering
+# Example: 1 (for first lesson), 5 (for capstone)
+sidebar_position: integer
+
+# Field 3: skills
+# Type: array of objects
+# Constraints: 1-3 skills per lesson, each skill has 6 sub-fields
+# Purpose: Learning competencies, skill taxonomy for RAG/personalization
+# Schema:
+skills:
+  - name: string                     # Skill name (e.g., "ROS2 Sensor Messages")
+    proficiency_level: enum          # beginner | intermediate | advanced
+    category: string                 # Taxonomy category (e.g., "sensor-perception", "sensor-fusion")
+    bloom_level: enum                # remember | understand | apply | analyze | evaluate | create
+    digcomp_area: string             # DigComp 2.2 area (e.g., "technical-concepts", "data-processing")
+    measurable_at_this_level: string # Action verb + object (e.g., "subscribe to sensor_msgs/Image topic")
+
+# Field 4: learning_objectives
+# Type: array of objects
+# Constraints: 3-5 objectives per lesson, each with 4 sub-fields
+# Purpose: Measurable learning outcomes, assessment mapping
+# Schema:
+learning_objectives:
+  - objective: string                # Starts with Bloom verb (e.g., "Understand camera types")
+    proficiency_level: enum          # beginner | intermediate | advanced
+    bloom_level: enum                # Must match objective verb
+    assessment_method: string        # How measured (e.g., "quiz questions 1-3, capstone task")
+
+# Field 5: cognitive_load
+# Type: object
+# Constraints: new_concepts 3-8, assessment must justify level
+# Purpose: Quantify learning difficulty for adaptive pacing
+# Schema:
+cognitive_load:
+  new_concepts: integer              # Number of new concepts introduced (3-8 range)
+  assessment: string                 # low | moderate | high + justification
+
+# Field 6: differentiation
+# Type: object
+# Constraints: Both fields required (no empty strings)
+# Purpose: Adaptive learning paths for diverse learners
+# Schema:
+differentiation:
+  extension_for_advanced: string     # Challenge/deeper exploration
+  remedial_for_struggling: string    # Support/prerequisite review
+
+# Field 7: tags
+# Type: array of strings
+# Constraints: 3-5 tags, lowercase, hyphenated, controlled vocabulary
+# Purpose: Search, filtering, RAG metadata
+# Controlled Vocabulary: ros2, sensors, perception, camera, depth, lidar, imu, fusion, humanoid-robotics
+# Example: ["ros2", "sensors", "camera", "computer-vision"]
+tags: array<string>
+
+# Field 8: generated_by
+# Type: string
+# Constraints: "agent" | "human" (literal values only)
+# Purpose: Track content authorship
+# Example: "agent" (for pipeline-generated content)
+generated_by: enum
+
+# Field 9: created
+# Type: string (ISO 8601 date)
+# Constraints: YYYY-MM-DD format
+# Purpose: Content creation timestamp
+# Example: "2025-12-07"
+created: string
+
+# Field 10: last_modified
+# Type: string (ISO 8601 date)
+# Constraints: YYYY-MM-DD format, must be >= created date
+# Purpose: Content update tracking
+# Example: "2025-12-07"
+last_modified: string
+
+# =============================================================================
+# VALIDATION RULES
+# =============================================================================
+
+# General Rules:
+# 1. All 13 fields MUST be present (no optional fields)
+# 2. No additional custom fields allowed (strictly 13 fields)
+# 3. YAML must be valid (no syntax errors)
+# 4. Frontmatter enclosed by triple-dash delimiters (--- at start and end)
+
+# Field-Specific Validation:
+# - title: Length <= 60 chars, no markdown formatting
+# - sidebar_position: Unique within module (no duplicate positions)
+# - skills[].proficiency_level: Must be "beginner" | "intermediate" | "advanced"
+# - skills[].bloom_level: Must be Bloom taxonomy level (remember, understand, apply, analyze, evaluate, create)
+# - skills[].measurable_at_this_level: Must start with action verb
+# - learning_objectives[].objective: Must start with capitalized Bloom verb
+# - learning_objectives[].bloom_level: Must match objective verb (e.g., "Understand..." → "understand")
+# - cognitive_load.new_concepts: Must be 3-8 (integer)
+# - cognitive_load.assessment: Must include justification phrase
+# - tags: All lowercase, no spaces (use hyphens), from controlled vocabulary
+# - generated_by: Exactly "agent" or "human" (no variations)
+# - created/last_modified: Valid ISO 8601 dates, last_modified >= created
+
+# =============================================================================
+# MODULE 2 SPECIFIC EXAMPLES
+# =============================================================================
+
+# Example 1: Lesson 1 - Camera Systems
+---
+title: "Lesson 1: Camera Systems and Computer Vision"
+sidebar_position: 1
+skills:
+  - name: "Camera Types for Robotics"
+    proficiency_level: "beginner"
+    category: "sensor-perception"
+    bloom_level: "understand"
+    digcomp_area: "technical-concepts"
+    measurable_at_this_level: "differentiate monocular, stereo, and RGB-D cameras"
+  - name: "ROS2 Image Messages"
+    proficiency_level: "beginner"
+    category: "robotics-middleware"
+    bloom_level: "apply"
+    digcomp_area: "data-processing"
+    measurable_at_this_level: "subscribe to sensor_msgs/Image topics in Python"
+learning_objectives:
+  - objective: "Understand the differences between monocular, stereo, and RGB-D cameras"
+    proficiency_level: "beginner"
+    bloom_level: "understand"
+    assessment_method: "quiz questions 1-2, capstone sensor selection"
+  - objective: "Apply knowledge of sensor_msgs/Image message structure to process camera data"
+    proficiency_level: "beginner"
+    bloom_level: "apply"
+    assessment_method: "code example comprehension, practice exercise"
+  - objective: "Analyze camera placement trade-offs for humanoid robot tasks"
+    proficiency_level: "intermediate"
+    bloom_level: "analyze"
+    assessment_method: "case study discussion, capstone justification"
+cognitive_load:
+  new_concepts: 5
+  assessment: "moderate - builds on ROS2 topics knowledge from Module 1"
+differentiation:
+  extension_for_advanced: "Explore camera calibration mathematics (Zhang's method) and lens distortion correction"
+  remedial_for_struggling: "Review image representation basics (pixels, RGB encoding) before ROS2 messages"
+tags: ["ros2", "sensors", "camera", "computer-vision", "humanoid-robotics"]
+generated_by: "agent"
+created: "2025-12-07"
+last_modified: "2025-12-07"
+---
+
+# Example 2: Lesson 3 - IMU and Proprioception
+---
+title: "Lesson 3: IMU and Proprioception"
+sidebar_position: 3
+skills:
+  - name: "IMU Sensor Principles"
+    proficiency_level: "intermediate"
+    category: "sensor-perception"
+    bloom_level: "understand"
+    digcomp_area: "technical-concepts"
+    measurable_at_this_level: "explain accelerometer, gyroscope, and magnetometer functions"
+  - name: "IMU-Based Orientation Estimation"
+    proficiency_level: "intermediate"
+    category: "sensor-fusion"
+    bloom_level: "analyze"
+    digcomp_area: "problem-solving"
+    measurable_at_this_level: "describe gyroscope drift and mitigation strategies"
+  - name: "Proprioception in Humanoid Robots"
+    proficiency_level: "intermediate"
+    category: "robotics-concepts"
+    bloom_level: "understand"
+    digcomp_area: "technical-concepts"
+    measurable_at_this_level: "define proprioception and its components (IMU, encoders, contact sensors)"
+learning_objectives:
+  - objective: "Understand how accelerometers, gyroscopes, and magnetometers measure motion"
+    proficiency_level: "intermediate"
+    bloom_level: "understand"
+    assessment_method: "quiz questions 9-11, sensor component matching exercise"
+  - objective: "Analyze the impact of sensor drift on IMU accuracy and balance control"
+    proficiency_level: "intermediate"
+    bloom_level: "analyze"
+    assessment_method: "quiz question 12, drift diagram interpretation"
+  - objective: "Apply sensor_msgs/Imu message structure to interpret IMU data streams"
+    proficiency_level: "intermediate"
+    bloom_level: "apply"
+    assessment_method: "code example, RViz visualization exercise"
+  - objective: "Understand the concept of proprioception in humanoid robotics"
+    proficiency_level: "intermediate"
+    bloom_level: "understand"
+    assessment_method: "quiz question 13, capstone system design"
+cognitive_load:
+  new_concepts: 6
+  assessment: "moderate-high - introduces new physics concepts (inertial sensing) but builds on ROS2 messages"
+differentiation:
+  extension_for_advanced: "Study quaternion mathematics for 3D orientation representation and gimbal lock avoidance"
+  remedial_for_struggling: "Review Module 1 Lesson 2 (ROS2 topics) and basic physics (acceleration, angular velocity)"
+tags: ["ros2", "sensors", "imu", "proprioception", "balance-control"]
+generated_by: "agent"
+created: "2025-12-07"
+last_modified: "2025-12-07"
+---
+
+# =============================================================================
+# CONTROLLED VOCABULARY
+# =============================================================================
+
+# Tags (Module 2 Allowed Values):
+# - ros2                  (all lessons)
+# - sensors               (all lessons)
+# - perception            (all lessons)
+# - camera                (Lesson 1)
+# - computer-vision       (Lesson 1)
+# - depth-sensing         (Lesson 2)
+# - lidar                 (Lesson 2)
+# - point-cloud           (Lesson 2)
+# - imu                   (Lesson 3)
+# - proprioception        (Lesson 3)
+# - balance-control       (Lesson 3)
+# - sensor-fusion         (Lesson 4)
+# - kalman-filter         (Lesson 4)
+# - humanoid-robotics     (all lessons)
+# - rviz                  (Lesson 1-4, capstone)
+# - multi-sensor-systems  (capstone)
+
+# Skill Categories (Module 2 Allowed Values):
+# - sensor-perception     (Lessons 1-3)
+# - sensor-fusion         (Lesson 3-4)
+# - robotics-middleware   (ROS2-specific skills)
+# - robotics-concepts     (general robotics theory)
+# - data-processing       (message handling, visualization)
+# - system-design         (capstone, architecture)
+# - problem-solving       (analysis, troubleshooting)
+
+# Bloom Levels (Standard Taxonomy):
+# 1. remember   - Recall facts (e.g., "List sensor types")
+# 2. understand - Explain concepts (e.g., "Explain how LiDAR works")
+# 3. apply      - Use in new situations (e.g., "Apply Kalman filter to sensor data")
+# 4. analyze    - Break down and examine (e.g., "Analyze trade-offs between sensors")
+# 5. evaluate   - Justify decisions (e.g., "Evaluate sensor configurations")
+# 6. create     - Design new solutions (e.g., "Create multi-sensor fusion strategy")
+
+# Proficiency Levels (Module 2 Progression):
+# - beginner      (Lessons 1-2: Camera, Depth Sensing)
+# - intermediate  (Lessons 3-4: IMU, Sensor Fusion)
+# - advanced      (Extension activities, capstone challenges)
+
+# =============================================================================
+# VALIDATION SCRIPT HOOKS
+# =============================================================================
+
+# Automated validation checks (implemented in .specify/scripts/bash/validate-markdown.sh):
+# 1. YAML syntax validation (using yq or python yaml parser)
+# 2. Required fields presence check (all 13 fields)
+# 3. sidebar_position uniqueness within module
+# 4. Date format validation (YYYY-MM-DD regex)
+# 5. Enum value validation (proficiency_level, bloom_level, generated_by)
+# 6. Tag vocabulary compliance (against allowed list)
+# 7. Cognitive load range (new_concepts 3-8)
+# 8. Learning objective Bloom verb matching
+
+# Manual validation checks (performed by Structure & Style Agent):
+# 1. Title descriptiveness and clarity
+# 2. Skill measurability (action verb present)
+# 3. Learning objective alignment with content
+# 4. Cognitive load justification accuracy
+# 5. Differentiation appropriateness for target audience
+
+# =============================================================================
+# SUMMARY
+# =============================================================================
+
+# This schema contract ensures:
+# - Consistency: All Module 2 lessons use identical frontmatter structure
+# - RAG-Readiness: Rich metadata enables semantic search and personalization
+# - Quality: Validation rules catch errors before content publication
+# - Traceability: created/last_modified timestamps track content evolution
+# - Measurability: Learning objectives and skills tied to assessments
+
+# Compliance Requirement: All lesson files MUST validate against this schema
+# before passing to Docusaurus Integration Agent (pipeline step 8)

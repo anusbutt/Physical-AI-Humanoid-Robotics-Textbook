@@ -1,0 +1,192 @@
+# Frontmatter Metadata Template - Module 1: ROS2 Nervous System
+
+# Purpose: Standard YAML frontmatter for all lesson markdown files
+# Based on: data-model.md FrontmatterMetadata schema
+# Usage: Copy this template to the top of each lesson .md file and fill in values
+# Validation: All 13 fields are REQUIRED (no null/empty values allowed)
+
+---
+# FIELD 1: Title (String)
+# The lesson name as it appears in navigation and page header
+# Format: Clear, student-facing description
+# Example: "ROS2 Fundamentals" or "Nodes, Topics, and Services"
+title: "[Lesson Title]"
+
+# FIELD 2: Sidebar Position (Integer)
+# Numeric order for Docusaurus navigation
+# Range: 1-4 for lessons, 5 for capstone, 6 for quiz
+# Must be unique within module
+# Example: 1 (for Lesson 1), 2 (for Lesson 2), etc.
+sidebar_position: [1-6]
+
+# FIELD 3: Skills (Array of Skill objects)
+# Skills students will develop in this lesson
+# Must contain 1-3 skill objects
+# Each skill has 6 required sub-fields
+skills:
+  - name: "[Skill Name - what student will learn]"
+    # Example: "ROS2 Architecture Understanding" or "Node Communication Design"
+
+    proficiency_level: "[beginner | intermediate | advanced]"
+    # Use "beginner" for Module 1 (intro to ROS2)
+
+    category: "[skill category]"
+    # Examples: "robotics-middleware", "programming", "system-design", "robot-modeling"
+
+    bloom_level: "[remember | understand | apply | analyze | evaluate | create]"
+    # Bloom's Taxonomy cognitive level
+    # Module 1 typically uses "understand" and "apply"
+    # Examples:
+    #   - "understand" for conceptual learning
+    #   - "apply" for using concepts in new contexts
+
+    digcomp_area: "[DigComp 2.2 competence area]"
+    # Examples: "technical-concepts", "problem-solving", "content-creation"
+
+    measurable_at_this_level: "[What student can demonstrate]"
+    # Specific, observable outcome
+    # Examples:
+    #   - "explain ROS2's role as middleware"
+    #   - "identify appropriate topic vs service patterns"
+    #   - "read and interpret rclpy publisher code"
+
+  # Add 1-2 more skills if lesson covers multiple competencies
+  # - name: "[Second Skill]"
+  #   proficiency_level: "beginner"
+  #   category: "[category]"
+  #   bloom_level: "understand"
+  #   digcomp_area: "[area]"
+  #   measurable_at_this_level: "[outcome]"
+
+# FIELD 4: Learning Objectives (Array of LearningObjective objects)
+# What students will be able to do after completing the lesson
+# Must contain 1-5 objectives
+# Each objective has 4 required sub-fields
+learning_objectives:
+  - objective: "[Clear statement of what student will learn]"
+    # Format: "Understand/Explain/Identify/Apply [concept]"
+    # Examples:
+    #   - "Understand what ROS2 is and why it's used in robotics"
+    #   - "Explain the difference between topics and services"
+    #   - "Read and interpret Python rclpy code for simple nodes"
+
+    proficiency_level: "[beginner | intermediate | advanced]"
+    # Use "beginner" for Module 1
+
+    bloom_level: "[remember | understand | apply | analyze | evaluate | create]"
+    # Should match the verb in the objective
+    # "Understand" → "understand"
+    # "Explain/Identify" → "understand"
+    # "Apply/Use" → "apply"
+
+    assessment_method: "[How this objective is measured]"
+    # Examples:
+    #   - "quiz + capstone project"
+    #   - "quiz questions 1-4"
+    #   - "capstone design exercise"
+    #   - "practice exercise + self-reflection"
+
+  # Add 1-4 more objectives as needed
+  # - objective: "[Second objective]"
+  #   proficiency_level: "beginner"
+  #   bloom_level: "understand"
+  #   assessment_method: "quiz"
+
+# FIELD 5: Cognitive Load (Object with 2 sub-fields)
+# Assessment of how demanding this lesson is for students
+cognitive_load:
+  new_concepts: [3-7]
+  # Integer count of NEW concepts introduced (not reinforced from prior lessons)
+  # Range: 3-7 concepts per lesson (spec requirement)
+  # Examples:
+  #   - Lesson 1: 5 (ROS2, middleware, nodes, topics, pub/sub)
+  #   - Lesson 2: 4 (services, request/response, QoS, communication patterns)
+
+  assessment: "[Difficulty description]"
+  # String describing cognitive demand and prerequisites
+  # Format: "[low/moderate/high] - [reason/context]"
+  # Examples:
+  #   - "moderate - builds on networking and Python knowledge"
+  #   - "moderate - introduces new concepts but leverages prior ROS2 understanding"
+  #   - "low - reinforces concepts from previous lessons"
+
+# FIELD 6: Differentiation (Object with 2 sub-fields)
+# Guidance for students at different learning levels/paces
+differentiation:
+  extension_for_advanced: "[Optional deeper exploration for fast/advanced students]"
+  # Suggestions for students who want to go further
+  # Examples:
+  #   - "Research ROS2 DDS implementations and QoS profiles"
+  #   - "Explore ROS2 actions for long-running tasks"
+  #   - "Investigate URDF Xacro macros for modular robot descriptions"
+
+  remedial_for_struggling: "[Prerequisite review or simpler explanation for struggling students]"
+  # Help for students who need additional support
+  # Examples:
+  #   - "Review distributed systems basics first"
+  #   - "Practice Python OOP concepts before continuing"
+  #   - "Revisit Lesson 1 for ROS2 fundamentals review"
+
+# FIELD 7: Tags (Array of Strings)
+# Keywords for categorization, search, and RAG retrieval
+# Include topic-specific and general tags
+# Examples: ["ros2", "middleware", "fundamentals", "architecture"]
+tags: ["ros2", "[topic1]", "[topic2]", "[topic3]"]
+# Recommended tags per lesson:
+#   - Lesson 1: ["ros2", "middleware", "fundamentals", "architecture", "distributed-systems"]
+#   - Lesson 2: ["ros2", "nodes", "topics", "services", "communication", "pub-sub"]
+#   - Lesson 3: ["ros2", "rclpy", "python", "programming", "publishers", "subscribers"]
+#   - Lesson 4: ["ros2", "urdf", "robot-modeling", "xml", "kinematics", "humanoid"]
+
+# FIELD 8: Generated By (Enum: "manual" | "agent")
+# How this lesson was created
+# Use "manual" for Lesson 1 (golden example)
+# Use "manual" or "agent" for Lessons 2-4 depending on authoring method
+generated_by: "[manual | agent]"
+
+# FIELD 9: Created (ISO Date String)
+# Date the lesson was first created
+# Format: YYYY-MM-DD
+# Example: "2025-12-05"
+created: "YYYY-MM-DD"
+
+# FIELD 10: Last Modified (ISO Date String)
+# Date the lesson was last updated
+# Format: YYYY-MM-DD
+# Update this field whenever lesson content changes
+# Initially same as `created` date
+last_modified: "YYYY-MM-DD"
+
+# FIELD 11: ROS2 Version (String)
+# ROS2 distribution this content is based on
+# Module 1 uses "humble" (LTS release)
+# This field is specific to Module 1; may vary for other modules
+ros2_version: "humble"
+
+---
+
+# VALIDATION CHECKLIST
+# Before using this frontmatter, verify:
+# [ ] All 13 fields are present (no fields missing)
+# [ ] No placeholder text remains (all [brackets] replaced)
+# [ ] sidebar_position is unique within module (1-6)
+# [ ] skills array has 1-3 objects
+# [ ] learning_objectives array has 1-5 objects
+# [ ] cognitive_load.new_concepts is 3-7
+# [ ] bloom_level values are valid: remember, understand, apply, analyze, evaluate, create
+# [ ] proficiency_level values are valid: beginner, intermediate, advanced
+# [ ] Dates are ISO format: YYYY-MM-DD
+# [ ] generated_by is either "manual" or "agent"
+# [ ] ros2_version is "humble" for Module 1
+# [ ] tags array is not empty
+
+# USAGE NOTES
+# 1. Copy this entire block (from first --- to final ---) to top of lesson .md file
+# 2. Replace all [placeholder] values with actual content
+# 3. Remove this comment block (everything after the final ---)
+# 4. Ensure proper YAML indentation (2 spaces per level)
+# 5. Use double quotes for string values (avoid special characters without quotes)
+# 6. Arrays use "- " (dash + space) for each item
+
+# EXAMPLE (Lesson 1: ROS2 Fundamentals)
+# See data-model.md lines 148-176 for complete filled example

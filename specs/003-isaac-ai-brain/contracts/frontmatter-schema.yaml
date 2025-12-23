@@ -1,0 +1,173 @@
+# Frontmatter Metadata Schema - Module 3: The AI-Robot Brain (NVIDIA Isaac™)
+
+# Purpose: Standard YAML frontmatter for all Module 3 lesson markdown files
+# Based on: data-model.md FrontmatterMetadata schema with Isaac-specific adaptations
+# Usage: Copy this template to the top of each lesson .md file and fill in values
+# Validation: All 13 fields are REQUIRED (no null/empty values allowed)
+
+---
+# FIELD 1: Title (String)
+# The lesson name as it appears in navigation and page header
+# Format: Clear, student-facing description with Isaac focus
+# Example: "Isaac Sim for Photorealistic Simulation" or "Isaac ROS Hardware-Accelerated Perception"
+title: "[Isaac-Specific Lesson Title]"
+
+# FIELD 2: Sidebar Position (Integer)
+# Numeric order for Docusaurus navigation
+# Range: 1-4 for lessons, 5 for capstone, 6 for quiz
+# Must be unique within module
+# Example: 1 (for Lesson 1), 2 (for Lesson 2), etc.
+sidebar_position: [1-6]
+
+# FIELD 3: Skills (Array of Skill objects)
+# Isaac-specific skills students will develop in this lesson
+# Must contain 1-3 skill objects
+# Each skill has 6 required sub-fields
+skills:
+  - name: "[Isaac-Specific Skill Name - what student will learn]"
+    # Example: "Isaac Sim Scene Creation" or "Isaac ROS VSLAM Integration" or "Nav2 Path Planning"
+
+    proficiency_level: "[beginner | intermediate | advanced]"
+    # Use "beginner" for foundational Isaac concepts, "intermediate" for applied usage
+
+    category: "[isaac-specific category]"
+    # Examples: "simulation", "perception", "navigation", "system-integration", "ai-platform"
+
+    bloom_level: "[remember | understand | apply | analyze | evaluate | create]"
+    # Bloom's Taxonomy cognitive level
+    # Module 3 typically uses "understand" and "apply", "analyze" for integration lesson
+    # Examples:
+    #   - "understand" for conceptual Isaac learning
+    #   - "apply" for using Isaac tools in new contexts
+    #   - "analyze" for system integration scenarios
+
+    digcomp_area: "[DigComp 2.2 competence area]"
+    # Examples: "technical-concepts", "problem-solving", "content-creation", "information-processing"
+
+    measurable_at_this_level: "[What student can demonstrate with Isaac tech]"
+    # Specific, observable outcome related to Isaac platform
+    # Examples:
+    #   - "explain Isaac Sim's role in robotics development"
+    #   - "describe Isaac ROS hardware acceleration benefits"
+    #   - "identify appropriate Nav2 configurations for humanoid navigation"
+    #   - "design integrated autonomous navigation system using Isaac platform"
+
+  # Add 1-2 more skills if lesson covers multiple Isaac competencies
+  # - name: "[Second Isaac Skill]"
+  #   proficiency_level: "beginner" | "intermediate"
+  #   category: "[category]"
+  #   bloom_level: "understand" | "apply"
+  #   digcomp_area: "[area]"
+  #   measurable_at_this_level: "[Isaac-specific outcome]"
+
+# FIELD 4: Learning Objectives (Array of LearningObjective objects)
+# What students will be able to do after completing the Isaac lesson
+# Must contain 1-5 objectives
+# Each objective has 4 required sub-fields
+learning_objectives:
+  - objective: "[Clear statement of Isaac-specific learning outcome]"
+    # Format: "Understand/Explain/Identify/Apply [Isaac concept]"
+    # Examples:
+    #   - "Understand what Isaac Sim is and how it enables photorealistic simulation"
+    #   - "Explain the benefits of Isaac ROS hardware-accelerated perception"
+    #   - "Apply Nav2 path planning concepts to bipedal humanoid navigation"
+    #   - "Analyze system integration challenges in Isaac platform deployment"
+
+    proficiency_level: "[beginner | intermediate | advanced]"
+    # Use "beginner" for foundational Isaac concepts, "intermediate" for applied usage
+
+    bloom_level: "[remember | understand | apply | analyze | evaluate | create]"
+    # Should match the verb in the objective
+    # "Understand/Explain/Identify" → "understand"
+    # "Apply/Use" → "apply"
+    # "Analyze/Evaluate" → "analyze"
+
+    assessment_method: "[How this Isaac objective is measured]"
+    # Examples:
+    #   - "quiz + capstone project"
+    #   - "quiz questions 1-4"
+    #   - "capstone design exercise"
+    #   - "practice exercise + self-reflection"
+
+  # Add 1-4 more objectives as needed
+  # - objective: "[Second Isaac objective]"
+  #   proficiency_level: "beginner" | "intermediate"
+  #   bloom_level: "understand" | "apply"
+  #   assessment_method: "quiz + capstone"
+
+# FIELD 5: Cognitive Load (Object with 2 sub-fields)
+# Assessment of how demanding this Isaac lesson is for students
+cognitive_load:
+  new_concepts: [3-7]
+  # Integer count of NEW Isaac concepts introduced (not reinforced from prior lessons)
+  # Range: 3-7 concepts per lesson (spec requirement)
+  # Examples:
+  #   - Lesson 1: 5 (Isaac Sim, photorealistic rendering, domain randomization, synthetic data, sim-to-real)
+  #   - Lesson 2: 4 (Isaac ROS, GPU acceleration, cuVSLAM, hardware requirements)
+  #   - Lesson 3: 4 (Nav2, global planners, costmaps, humanoid constraints)
+  #   - Lesson 4: 3 (system integration, data flow, performance optimization)
+
+  assessment: "[Isaac-specific difficulty description]"
+  # String describing cognitive demand and prerequisites
+  # Format: "[low/moderate/high] - [reason/context with Isaac focus]"
+  # Examples:
+  #   - "moderate - builds on ROS2 knowledge, introduces Isaac Sim concepts"
+  #   - "moderate - builds on simulation knowledge, introduces Isaac ROS perception"
+  #   - "high - integrates multiple Isaac platform components"
+  #   - "low - reinforces Isaac concepts from previous lessons"
+
+# FIELD 6: Differentiation (Object with 2 sub-fields)
+# Guidance for students at different learning levels/paces with Isaac context
+differentiation:
+  extension_for_advanced: "[Optional deeper Isaac exploration for fast/advanced students]"
+  # Suggestions for students who want to go further with Isaac platform
+  # Examples:
+  #   - "Research Isaac Sim domain randomization parameters for robust sim-to-real transfer"
+  #   - "Explore Isaac ROS GEMs beyond VSLAM (cuMotion, cuOpt)"
+  #   - "Investigate Nav2 behavior trees for complex humanoid navigation"
+  #   - "Compare Isaac Sim with other simulation platforms (Gazebo, Webots)"
+
+  remedial_for_struggling: "[Prerequisite review or simpler explanation for struggling students]"
+  # Help for students who need additional support with Isaac concepts
+  # Examples:
+  #   - "Review Module 1-2 ROS2 concepts before continuing with Isaac integration"
+  #   - "Practice basic simulation concepts before Isaac Sim advanced features"
+  #   - "Revisit perception fundamentals before Isaac ROS hardware acceleration"
+  #   - "Acknowledge NVIDIA GPU requirement but focus on conceptual understanding"
+
+# FIELD 7: Tags (Array of Strings)
+# Keywords for categorization, search, and RAG retrieval with Isaac focus
+# Include Isaac-specific and general tags
+# Examples: ["nvidia-isaac", "isaac-sim", "simulation", "perception"]
+tags: ["nvidia-isaac", "[isaac-component]", "[topic1]", "[topic2]"]
+# Recommended tags per lesson:
+#   - Lesson 1: ["nvidia-isaac", "isaac-sim", "simulation", "photorealistic-rendering", "domain-randomization"]
+#   - Lesson 2: ["nvidia-isaac", "isaac-ros", "gpu-acceleration", "vslam", "perception"]
+#   - Lesson 3: ["nvidia-isaac", "nav2", "path-planning", "navigation", "bipedal-locomotion"]
+#   - Lesson 4: ["nvidia-isaac", "system-integration", "autonomous-navigation", "sim-to-real"]
+
+# FIELD 8: Generated By (Enum: "manual" | "agent")
+# How this lesson was created
+# Use "manual" for Lesson 1 (golden example)
+# Use "manual" or "agent" for Lessons 2-4 depending on authoring method
+generated_by: "[manual | agent]"
+
+# FIELD 9: Created (ISO Date String)
+# Date the lesson was first created
+# Format: YYYY-MM-DD
+# Example: "2025-12-17"
+created: "YYYY-MM-DD"
+
+# FIELD 10: Last Modified (ISO Date String)
+# Date the lesson was last updated
+# Format: YYYY-MM-DD
+# Update this field whenever lesson content changes
+# Initially same as `created` date
+last_modified: "YYYY-MM-DD"
+
+# FIELD 11: ROS2 Version (String)
+# ROS2 distribution this Isaac content integrates with
+# Module 3 uses "humble" (LTS release) to maintain consistency with Modules 1-2
+ros2_version: "humble"
+
+---

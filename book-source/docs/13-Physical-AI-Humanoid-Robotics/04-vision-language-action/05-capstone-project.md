@@ -163,7 +163,7 @@ Document your design decisions, including why you chose specific approaches for 
 
 Your capstone project will be evaluated on:
 
-| Category | Excellent (90-100%) | Good (80-89%) | Needs Work (<80%) |
+| Category | Excellent (90-100%) | Good (80-89%) | Needs Work (&lt;80%) |
 |----------|---------------------|---------------|-------------------|
 | **System Architecture** (30 pts) | Complete system with detailed component interfaces, clear data flow, robust error handling, addresses safety concerns | System covers main components, interfaces mostly clear, basic error handling, safety considerations addressed | Missing key components or interfaces, unclear data flow, poor error handling, safety concerns not addressed |
 | **Voice Processing** (20 pts) | Comprehensive audio processing pipeline, effective Whisper integration, robust error handling, confidence-based validation | Voice processing covers main functions, Whisper integration works, basic error handling | Incomplete audio processing, poor Whisper integration, inadequate error handling |

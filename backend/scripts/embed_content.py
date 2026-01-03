@@ -281,9 +281,11 @@ def process_lesson(
                     print(f"[ERROR] Embedding failed: {e}")
                     raise
 
-        # Add delay between chunks to respect rate limits (60 seconds = ~1 per minute)
+        # Add delay between chunks to respect rate limits
+        # Paid tier: 5 seconds (10,000 calls/month = ~6-7 per minute safe)
+        # Free tier was: 60 seconds (100 calls/month)
         if i + BATCH_SIZE < len(chunk_texts):
-            time.sleep(60)  # 60 seconds between chunks for free tier
+            time.sleep(5)  # 5 seconds for paid tier
 
     # Upload to Qdrant
     print(f"[INFO] Uploading to Qdrant...")

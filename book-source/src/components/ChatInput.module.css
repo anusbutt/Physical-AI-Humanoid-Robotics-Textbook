@@ -1,0 +1,216 @@
+/**
+ * Styles for ChatInput component
+ */
+
+.chatInput {
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+  border-top: 1px solid #e0e0e0;
+  padding: 1rem;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.selectedTextBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 6px;
+  gap: 0.5rem;
+}
+
+.selectedTextContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.selectedTextContent strong {
+  font-size: 0.875rem;
+  color: #f57c00;
+}
+
+.selectedTextPreview {
+  font-size: 0.875rem;
+  color: #666;
+  font-style: italic;
+  display: block;
+  margin-top: 0.25rem;
+}
+
+.clearSelectionButton {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+
+.clearSelectionButton:hover {
+  color: #f44336;
+}
+
+.inputForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inputWrapper {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.textarea {
+  flex: 1;
+  min-height: 44px;
+  max-height: 200px;
+  padding: 0.75rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: none;
+  overflow-y: auto;
+  transition: border-color 0.2s;
+  line-height: 1.5;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #2196f3;
+}
+
+.textarea:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.sendButton {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 8px;
+  background-color: #2196f3;
+  color: white;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sendButton:hover:not(:disabled) {
+  background-color: #1976d2;
+  transform: scale(1.05);
+}
+
+.sendButton:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.sendButtonDisabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.sendIcon {
+  display: inline-block;
+  transform: translateX(1px);
+}
+
+.spinner {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.inputFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: #666;
+  padding: 0 0.25rem;
+}
+
+.charCounter {
+  font-weight: 500;
+}
+
+.charCounterWarning {
+  color: #f57c00;
+}
+
+.hint {
+  font-style: italic;
+  color: #999;
+}
+
+/* Dark mode support */
+[data-theme='dark'] .chatInput {
+  background-color: #1e1e1e;
+  border-top-color: #333;
+}
+
+[data-theme='dark'] .selectedTextBanner {
+  background-color: #3d3520;
+  border-color: #ffc107;
+}
+
+[data-theme='dark'] .textarea {
+  background-color: #2d2d2d;
+  border-color: #444;
+  color: #e0e0e0;
+}
+
+[data-theme='dark'] .textarea:focus {
+  border-color: #64b5f6;
+}
+
+[data-theme='dark'] .sendButton {
+  background-color: #1976d2;
+}
+
+[data-theme='dark'] .sendButton:hover:not(:disabled) {
+  background-color: #1565c0;
+}
+
+[data-theme='dark'] .sendButtonDisabled {
+  background-color: #555;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .chatInput {
+    padding: 0.75rem;
+  }
+
+  .hint {
+    display: none;
+  }
+
+  .inputFooter {
+    justify-content: flex-end;
+  }
+}

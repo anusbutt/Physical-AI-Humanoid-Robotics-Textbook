@@ -1,0 +1,155 @@
+/**
+ * Styles for ChatMessage component
+ */
+
+.message {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border-radius: 8px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.userMessage {
+  background-color: #e3f2fd;
+  border-left: 4px solid #2196f3;
+  margin-left: 10%;
+}
+
+.assistantMessage {
+  background-color: #f5f5f5;
+  border-left: 4px solid #4caf50;
+  margin-right: 10%;
+}
+
+.messageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.role {
+  font-weight: 600;
+  color: #333;
+}
+
+.timestamp {
+  color: #666;
+  font-size: 0.75rem;
+}
+
+.messageContent {
+  color: #222;
+}
+
+.selectedTextIndicator {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background-color: rgba(255, 193, 7, 0.1);
+  border-left: 3px solid #ffc107;
+  border-radius: 4px;
+}
+
+.selectedTextIndicator strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #f57c00;
+  font-size: 0.875rem;
+}
+
+.selectedTextQuote {
+  margin: 0;
+  padding: 0.5rem;
+  font-style: italic;
+  color: #555;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.content {
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.sources {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ddd;
+}
+
+.sourcesTitle {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #555;
+  font-size: 0.875rem;
+}
+
+.sourcesList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sourceItem {
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  font-size: 0.875rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sourceLocation {
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.similarityScore {
+  color: #666;
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+/* Dark mode support (if Docusaurus has dark theme) */
+[data-theme='dark'] .userMessage {
+  background-color: #1e3a5f;
+  border-left-color: #64b5f6;
+}
+
+[data-theme='dark'] .assistantMessage {
+  background-color: #1e1e1e;
+  border-left-color: #81c784;
+}
+
+[data-theme='dark'] .messageContent {
+  color: #e0e0e0;
+}
+
+[data-theme='dark'] .role {
+  color: #e0e0e0;
+}
+
+[data-theme='dark'] .timestamp {
+  color: #999;
+}
+
+[data-theme='dark'] .sourceLocation {
+  color: #64b5f6;
+}

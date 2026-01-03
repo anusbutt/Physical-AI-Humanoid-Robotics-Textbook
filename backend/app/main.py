@@ -11,6 +11,7 @@ from datetime import datetime
 import logging
 
 from app.api.chat import router as chat_router, initialize_chat_services
+from app.middleware.error_handler import ErrorHandlerMiddleware
 
 # Configure logging
 logging.basicConfig(
@@ -43,6 +44,9 @@ app.add_middleware(
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"]
 )
+
+# Add error handling middleware (catches exceptions from services)
+app.add_middleware(ErrorHandlerMiddleware)
 
 # Include routers
 app.include_router(chat_router)

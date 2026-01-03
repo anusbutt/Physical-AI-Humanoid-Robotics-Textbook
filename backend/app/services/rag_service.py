@@ -111,6 +111,9 @@ class RAGService:
         filters = None
         if lesson_id:
             filters = {'lesson': lesson_id}
+            logger.info(f"Filtering search to lesson: {lesson_id}")
+        else:
+            logger.info("Cross-module search enabled (no lesson filter)")
 
         # Step 4: Adjust retrieval parameters if selected text is provided
         # Retrieve more chunks for selected text queries to ensure coverage
@@ -127,6 +130,14 @@ class RAGService:
 
         logger.info(f"Retrieved {len(results)} chunks from Qdrant")
 
+        # Check if no results found (empty or low similarity)
+        if len(results) == 0:
+            logger.warning(f"No results found for query: {user_query[:100]}...")
+            # Set flag for no-results response
+            no_results_found = True
+        else:
+            no_results_found = False
+
         # Step 6: Build context from retrieved chunks
         context = self._build_context(results, sanitized_selected_text)
 
@@ -138,7 +149,8 @@ class RAGService:
             user_query=user_query,
             context=context,
             conversation_context=conversation_context,
-            has_selected_text=sanitized_selected_text is not None
+            has_selected_text=sanitized_selected_text is not None,
+            no_results_found=no_results_found
         )
 
         # Step 9: Extract sources
@@ -269,7 +281,8 @@ class RAGService:
         user_query: str,
         context: str,
         conversation_context: str,
-        has_selected_text: bool = False
+        has_selected_text: bool = False,
+        no_results_found: bool = False
     ) -> str:
         """
         Generate response using Gemini LLM.
@@ -279,10 +292,14 @@ class RAGService:
             context: Retrieved context from vector search
             conversation_context: Previous conversation messages
             has_selected_text: Whether user provided selected text
+            no_results_found: Whether vector search returned no results
 
         Returns:
             Generated response text
         """
+        # Handle no results case with helpful suggestions
+        if no_results_found:
+            return self._generate_no_results_response(user_query)
         # Build system prompt based on whether selected text is present
         if has_selected_text:
             system_prompt = """You are an expert AI tutor for the Physical AI & Humanoid Robotics course. Your role is to help students understand specific passages from the course materials.
@@ -311,8 +328,8 @@ Guidelines:
 3. Be concise but thorough - aim for 2-4 paragraphs
 4. Use technical terms correctly and explain them when first mentioned
 5. Reference specific modules/lessons when relevant
-6. If the user asks about something off-topic, politely redirect to course topics
-7. For code-related questions, provide practical examples when possible"""
+6. **Out-of-scope detection**: If the question is clearly outside the book's scope (e.g., weather, news, installation tutorials, non-robotics topics), politely decline and say: "That question is outside the scope of this Physical AI and Humanoid Robotics book. I can help you with questions about ROS2, sensors, NVIDIA Isaac Sim, or vision-language-action models."
+7. For code-related questions, provide practical examples when possible from the course materials"""
 
         # Build user prompt with context
         if has_selected_text:
@@ -388,3 +405,42 @@ Please provide a helpful answer based on the context above."""
                 seen.add(key)
 
         return sources
+
+    def _generate_no_results_response(self, user_query: str) -> str:
+        """
+        Generate a helpful response when no results are found in vector search.
+
+        Provides suggestions for alternative topics the student can ask about.
+
+        Args:
+            user_query: The user's original question
+
+        Returns:
+            Helpful response with suggestions
+        """
+        # Topic suggestions based on course modules
+        course_topics = [
+            "ROS2 Fundamentals (nodes, topics, services, actions)",
+            "Sensors & Perception (cameras, LiDAR, sensor fusion)",
+            "NVIDIA Isaac Sim (simulation, synthetic data)",
+            "Vision-Language-Action Models (VLAs, robot learning)"
+        ]
+
+        response = (
+            "I couldn't find specific information about that in the Physical AI & Humanoid Robotics course materials. "
+            "This might be because:\n\n"
+            "1. The question uses terminology not covered in the book\n"
+            "2. The topic is outside the book's scope\n"
+            "3. You might need to rephrase your question\n\n"
+            "**Here are topics I can help you with:**\n\n"
+        )
+
+        for topic in course_topics:
+            response += f"- {topic}\n"
+
+        response += (
+            "\nTry asking a more specific question about one of these areas, "
+            "or browse through the course lessons to find what you're looking for!"
+        )
+
+        return response

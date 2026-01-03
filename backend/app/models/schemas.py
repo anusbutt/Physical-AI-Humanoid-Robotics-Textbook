@@ -34,10 +34,17 @@ class Message(BaseModel):
 class ChatQueryRequest(BaseModel):
     """
     Request model for POST /api/chat/query
+
+    Cross-Module Search:
+    - If lesson_id is None: searches across ALL modules (default behavior)
+    - If lesson_id is provided: filters results to that specific lesson only
     """
     query: str = Field(..., min_length=1, max_length=2000, description="User's question")
     selected_text: Optional[str] = Field(None, description="Text selected by user on page")
-    lesson_id: Optional[str] = Field(None, description="Current lesson ID (e.g., 'module-01/lesson-02')")
+    lesson_id: Optional[str] = Field(
+        None,
+        description="Filter to specific lesson (e.g., 'module-01/lesson-02'). If None, searches all modules."
+    )
     conversation_history: List[Message] = Field(default_factory=list, description="Last 5 messages")
     conversation_id: Optional[str] = Field(None, description="Existing conversation ID (for multi-turn)")
     conversation_created_at: Optional[datetime] = Field(None, description="When conversation was created (for expiry check)")
@@ -65,6 +72,8 @@ class ChatQueryResponse(BaseModel):
     sources: List[Source] = Field(default_factory=list, description="Source citations")
     conversation_id: str = Field(..., description="Unique conversation ID")
     timestamp: datetime = Field(default_factory=datetime.utcnow, description="Response timestamp")
+    retrieved_chunks: Optional[int] = Field(None, description="Number of chunks retrieved from vector search")
+    used_selected_text: Optional[bool] = Field(None, description="Whether selected text was used in the query")
 
 
 class ChatFeedbackRequest(BaseModel):

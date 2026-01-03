@@ -27,6 +27,12 @@ const config: Config = {
 
   onBrokenLinks: 'warn',
 
+  // Custom fields for RAG chatbot backend URL
+  customFields: {
+    // Railway production backend (deployed January 3, 2026)
+    backendUrl: process.env.REACT_APP_BACKEND_URL || 'https://virtuous-creativity-production.up.railway.app',
+  },
+
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".

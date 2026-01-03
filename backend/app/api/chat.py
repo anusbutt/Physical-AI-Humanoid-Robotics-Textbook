@@ -138,7 +138,9 @@ async def chat_query(request: ChatQueryRequest):
             response=result['response'],
             sources=result['sources'],
             conversation_id=conversation_id,
-            timestamp=datetime.utcnow()
+            timestamp=datetime.utcnow(),
+            retrieved_chunks=result.get('retrieved_chunks'),
+            used_selected_text=result.get('used_selected_text')
         )
 
         logger.info(f"Response generated ({len(result['sources'])} sources)")
@@ -148,6 +150,15 @@ async def chat_query(request: ChatQueryRequest):
         raise
     except Exception as e:
         logger.error(f"Chat query error: {e}", exc_info=True)
+
+        # Handle specific Qdrant filter errors (filter not supported due to missing index)
+        error_msg = str(e)
+        if "Unexpected Response: 400" in error_msg and "Index required" in error_msg:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="The lesson filter is not available yet. Please search without lesson_id for now."
+            )
+
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to process query: {str(e)}"

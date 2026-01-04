@@ -4,15 +4,17 @@
  */
 
 import { useState, useCallback } from 'react';
-import type { Message, ChatError, ChatQueryRequest } from '../types/chat';
+import type { Message, ChatError, ChatQueryRequest, Conversation } from '../types/chat';
 import { sendChatQuery, apiErrorToChatError } from '../services/chatApi';
 import { useConversationHistory } from './useConversationHistory';
 
 interface UseChatStateReturn {
+  conversation: Conversation | null;
   isLoading: boolean;
   error: ChatError | null;
   sendMessage: (query: string, selectedText?: string | null) => Promise<void>;
   clearError: () => void;
+  clearConversation: () => void;
 }
 
 /**
@@ -27,6 +29,7 @@ export function useChatState(): UseChatStateReturn {
     addMessage,
     getRecentMessages,
     hasActiveConversation,
+    clearConversation,
   } = useConversationHistory();
 
   /**
@@ -101,9 +104,11 @@ export function useChatState(): UseChatStateReturn {
   }, []);
 
   return {
+    conversation,
     isLoading,
     error,
     sendMessage,
     clearError,
+    clearConversation,
   };
 }

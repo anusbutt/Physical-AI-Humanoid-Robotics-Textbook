@@ -6,7 +6,6 @@
 import React, { useRef, useEffect } from 'react';
 import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
-import { useConversationHistory } from '../hooks/useConversationHistory';
 import { useChatState } from '../hooks/useChatState';
 import { useTextSelection } from '../hooks/useTextSelection';
 import styles from './ChatInterface.module.css';
@@ -18,12 +17,7 @@ interface ChatInterfaceProps {
 
 export const ChatInterface: React.FC<ChatInterfaceProps> = ({ isOpen, onClose }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const {
-    conversation,
-    clearConversation,
-  } = useConversationHistory();
-
-  const { isLoading, error, sendMessage, clearError } = useChatState();
+  const { conversation, isLoading, error, sendMessage, clearError, clearConversation } = useChatState();
   const { selectedText, hasValidSelection, clearSelection } = useTextSelection();
 
   // Auto-scroll to bottom when new messages arrive

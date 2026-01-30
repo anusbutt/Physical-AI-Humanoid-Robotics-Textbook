@@ -1,5 +1,5 @@
 /**
- * Floating Chat Button - Neon Red Theme
+ * Floating Chat Button - Premium Cyan Theme
  */
 
 .floatingChatButton {
@@ -10,23 +10,21 @@
   align-items: center;
   gap: 0.75rem;
   padding: 1rem 1.5rem;
-  background: linear-gradient(135deg, #ff0a3c 0%, #cc0030 100%);
-  color: white;
+  background: linear-gradient(135deg, #00d4ff 0%, #0094b3 100%);
+  color: #030712;
   border: none;
   border-radius: 50px;
   box-shadow:
-    0 4px 20px rgba(255, 10, 60, 0.5),
-    0 0 40px rgba(255, 10, 60, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 4px 20px rgba(0, 212, 255, 0.5),
+    0 0 40px rgba(0, 212, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
   cursor: pointer;
-  font-size: 1rem;
-  font-weight: 700;
-  font-family: 'Inter', sans-serif;
-  letter-spacing: 0.02em;
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
   z-index: 9998;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: fadeInUp 0.5s ease-out, buttonGlow 2s ease-in-out infinite alternate;
-  text-transform: uppercase;
+  animation: fadeInUp 0.5s ease-out;
 }
 
 @keyframes fadeInUp {
@@ -40,57 +38,40 @@
   }
 }
 
-@keyframes buttonGlow {
-  from {
-    box-shadow:
-      0 4px 20px rgba(255, 10, 60, 0.5),
-      0 0 40px rgba(255, 10, 60, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  }
-  to {
-    box-shadow:
-      0 4px 30px rgba(255, 10, 60, 0.7),
-      0 0 60px rgba(255, 10, 60, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  }
-}
-
 .floatingChatButton:hover {
-  transform: translateY(-4px) scale(1.05);
+  transform: translateY(-4px) scale(1.02);
   box-shadow:
-    0 8px 40px rgba(255, 10, 60, 0.6),
-    0 0 80px rgba(255, 10, 60, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    0 8px 30px rgba(0, 212, 255, 0.6),
+    0 0 60px rgba(0, 212, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .floatingChatButton:active {
-  transform: translateY(-2px) scale(1.02);
+  transform: translateY(-2px) scale(1);
 }
 
 .chatIcon {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   line-height: 1;
-  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
 }
 
 .chatLabel {
-  font-size: 0.875rem;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  font-size: 0.9rem;
 }
 
 /* Pulse ring animation */
 .floatingChatButton::before {
   content: '';
   position: absolute;
-  top: -4px;
-  left: -4px;
-  right: -4px;
-  bottom: -4px;
-  background: linear-gradient(135deg, #ff0a3c 0%, #ff6b87 100%);
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  background: linear-gradient(135deg, #00d4ff 0%, #a855f7 100%);
   border-radius: 50px;
   z-index: -1;
   opacity: 0;
-  animation: pulseRing 2s ease-in-out infinite;
+  animation: pulseRing 3s ease-in-out infinite;
 }
 
 @keyframes pulseRing {
@@ -99,8 +80,8 @@
     transform: scale(1);
   }
   50% {
-    opacity: 0.4;
-    transform: scale(1.15);
+    opacity: 0.3;
+    transform: scale(1.08);
   }
 }
 
@@ -121,7 +102,7 @@
   }
 
   .chatIcon {
-    font-size: 1.75rem;
+    font-size: 1.6rem;
     margin: 0;
   }
 }
@@ -129,7 +110,7 @@
 /* Accessibility - reduce motion */
 @media (prefers-reduced-motion: reduce) {
   .floatingChatButton {
-    animation: fadeInUp 0.5s ease-out;
+    animation: none;
   }
 
   .floatingChatButton::before {

@@ -1,11 +1,11 @@
 /**
- * Chat Messages - Neon Red & Black Theme
+ * Chat Messages - Premium Cyan & Deep Space Theme
  */
 
 .message {
   margin-bottom: 1.5rem;
   padding: 1.25rem;
-  border-radius: 16px;
+  border-radius: 18px;
   animation: messageIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
 }
@@ -13,7 +13,7 @@
 @keyframes messageIn {
   from {
     opacity: 0;
-    transform: translateY(15px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -22,11 +22,10 @@
 }
 
 .userMessage {
-  background: linear-gradient(135deg, #1a0a10 0%, #0f0508 100%);
-  border: 1px solid rgba(255, 10, 60, 0.3);
-  border-left: 4px solid #ff0a3c;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.12) 0%, rgba(168, 85, 247, 0.08) 100%);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-left: 4px solid #00d4ff;
   margin-left: 8%;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .userMessage::before {
@@ -36,16 +35,15 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, #ff0a3c, transparent);
-  opacity: 0.5;
+  background: linear-gradient(90deg, #00d4ff, transparent);
+  opacity: 0.4;
 }
 
 .assistantMessage {
-  background: linear-gradient(145deg, #151515 0%, #0d0d0d 100%);
-  border: 1px solid #222;
-  border-left: 4px solid #444;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 4px solid #475569;
   margin-right: 8%;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .messageHeader {
@@ -57,39 +55,40 @@
 }
 
 .role {
-  font-weight: 700;
-  color: #ff0a3c;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  color: #00d4ff;
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 0.05em;
 }
 
 .assistantMessage .role {
-  color: #888;
+  color: #94a3b8;
 }
 
 .timestamp {
-  color: #555;
+  color: #475569;
   font-size: 0.7rem;
   font-family: 'JetBrains Mono', monospace;
 }
 
 .messageContent {
-  color: #e0e0e0;
+  color: #e2e8f0;
 }
 
 .selectedTextIndicator {
   margin-bottom: 1rem;
   padding: 1rem;
-  background: linear-gradient(135deg, #1a0f05 0%, #0f0a03 100%);
-  border-left: 3px solid #ff6b00;
-  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+  border-left: 3px solid #a855f7;
+  border-radius: 10px;
 }
 
 .selectedTextIndicator strong {
   display: block;
   margin-bottom: 0.5rem;
-  color: #ff6b00;
+  color: #a855f7;
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -99,12 +98,12 @@
   margin: 0;
   padding: 0.75rem;
   font-style: italic;
-  color: #aaa;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 6px;
+  color: #cbd5e1;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
   font-size: 0.875rem;
   line-height: 1.6;
-  border-left: 2px solid #ff6b00;
+  border-left: 2px solid #a855f7;
 }
 
 .content {
@@ -117,13 +116,14 @@
 .sources {
   margin-top: 1.25rem;
   padding-top: 1rem;
-  border-top: 1px solid #222;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .sourcesTitle {
   display: block;
   margin-bottom: 0.75rem;
-  color: #ff0a3c;
+  color: #00d4ff;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -137,11 +137,11 @@
 }
 
 .sourceItem {
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
   margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #1a1a1a 0%, #111 100%);
-  border: 1px solid #222;
-  border-radius: 10px;
+  background: rgba(0, 212, 255, 0.05);
+  border: 1px solid rgba(0, 212, 255, 0.1);
+  border-radius: 12px;
   font-size: 0.875rem;
   display: flex;
   justify-content: space-between;
@@ -150,21 +150,22 @@
 }
 
 .sourceItem:hover {
-  border-color: rgba(255, 10, 60, 0.3);
+  border-color: rgba(0, 212, 255, 0.3);
   transform: translateX(4px);
+  background: rgba(0, 212, 255, 0.08);
 }
 
 .sourceLocation {
-  color: #ff6b87;
+  color: #67e8f9;
   font-weight: 600;
   font-size: 0.85rem;
 }
 
 .similarityScore {
-  color: #555;
+  color: #475569;
   font-size: 0.7rem;
   font-family: 'JetBrains Mono', monospace;
-  background: #0a0a0a;
+  background: rgba(0, 0, 0, 0.3);
   padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+  border-radius: 6px;
 }

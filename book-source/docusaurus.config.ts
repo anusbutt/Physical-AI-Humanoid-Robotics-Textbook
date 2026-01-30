@@ -18,12 +18,12 @@ const config: Config = {
   url: 'https://anusbutt.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/hackathon-phase-01/',
+  baseUrl: '/Physical-AI-Humanoid-Robotics-Textbook/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'anusbutt', // Usually your GitHub org/user name.
-  projectName: 'hackathon-phase-01', // Usually your repo name.
+  projectName: 'Physical-AI-Humanoid-Robotics-Textbook', // Usually your repo name.
 
   onBrokenLinks: 'warn',
 
@@ -94,7 +94,7 @@ const config: Config = {
           label: 'Textbook',
         },
         {
-          href: 'https://github.com/anusbutt/hackathon-phase-01',
+          href: 'https://github.com/anusbutt/Physical-AI-Humanoid-Robotics-Textbook',
           label: 'GitHub',
           position: 'right',
         },
@@ -121,7 +121,7 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/anusbutt/hackathon-phase-01',
+              href: 'https://github.com/anusbutt/Physical-AI-Humanoid-Robotics-Textbook',
             },
             {
               label: 'LinkedIn',

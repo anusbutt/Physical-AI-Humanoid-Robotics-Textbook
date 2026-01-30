@@ -1,5 +1,5 @@
 /**
- * Styles for Root wrapper and floating chat button
+ * Floating Chat Button - Neon Red Theme
  */
 
 .floatingChatButton {
@@ -8,25 +8,31 @@
   right: 2rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.875rem 1.25rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #ff0a3c 0%, #cc0030 100%);
   color: white;
   border: none;
   border-radius: 50px;
-  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+  box-shadow:
+    0 4px 20px rgba(255, 10, 60, 0.5),
+    0 0 40px rgba(255, 10, 60, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
   cursor: pointer;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.02em;
   z-index: 9998;
-  transition: all 0.3s ease;
-  animation: fadeInUp 0.5s ease-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInUp 0.5s ease-out, buttonGlow 2s ease-in-out infinite alternate;
+  text-transform: uppercase;
 }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -34,65 +40,80 @@
   }
 }
 
+@keyframes buttonGlow {
+  from {
+    box-shadow:
+      0 4px 20px rgba(255, 10, 60, 0.5),
+      0 0 40px rgba(255, 10, 60, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  to {
+    box-shadow:
+      0 4px 30px rgba(255, 10, 60, 0.7),
+      0 0 60px rgba(255, 10, 60, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+}
+
 .floatingChatButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 30px rgba(102, 126, 234, 0.5);
+  transform: translateY(-4px) scale(1.05);
+  box-shadow:
+    0 8px 40px rgba(255, 10, 60, 0.6),
+    0 0 80px rgba(255, 10, 60, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .floatingChatButton:active {
-  transform: translateY(0);
+  transform: translateY(-2px) scale(1.02);
 }
 
 .chatIcon {
   font-size: 1.5rem;
   line-height: 1;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
 }
 
 .chatLabel {
   font-size: 0.875rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Pulse animation for attention */
-.floatingChatButton::after {
+/* Pulse ring animation */
+.floatingChatButton::before {
   content: '';
   position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  background: linear-gradient(135deg, #ff0a3c 0%, #ff6b87 100%);
   border-radius: 50px;
   z-index: -1;
   opacity: 0;
-  animation: pulse 2s ease-in-out infinite;
+  animation: pulseRing 2s ease-in-out infinite;
 }
 
-@keyframes pulse {
+@keyframes pulseRing {
   0%, 100% {
     opacity: 0;
     transform: scale(1);
   }
   50% {
-    opacity: 0.3;
-    transform: scale(1.1);
+    opacity: 0.4;
+    transform: scale(1.15);
   }
-}
-
-/* Dark mode support */
-[data-theme='dark'] .floatingChatButton {
-  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
-}
-
-[data-theme='dark'] .floatingChatButton:hover {
-  box-shadow: 0 6px 30px rgba(102, 126, 234, 0.4);
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
   .floatingChatButton {
-    bottom: 1rem;
-    right: 1rem;
-    padding: 0.75rem 1rem;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    padding: 1rem;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    justify-content: center;
   }
 
   .chatLabel {
@@ -101,20 +122,21 @@
 
   .chatIcon {
     font-size: 1.75rem;
+    margin: 0;
   }
 }
 
 /* Accessibility - reduce motion */
 @media (prefers-reduced-motion: reduce) {
   .floatingChatButton {
-    animation: none;
+    animation: fadeInUp 0.5s ease-out;
   }
 
-  .floatingChatButton::after {
+  .floatingChatButton::before {
     animation: none;
   }
 
   .floatingChatButton:hover {
-    transform: none;
+    transform: translateY(-2px);
   }
 }

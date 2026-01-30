@@ -1,18 +1,19 @@
 /**
- * Styles for ChatMessage component
+ * Chat Messages - Neon Red & Black Theme
  */
 
 .message {
   margin-bottom: 1.5rem;
-  padding: 1rem;
-  border-radius: 8px;
-  animation: fadeIn 0.3s ease-in;
+  padding: 1.25rem;
+  border-radius: 16px;
+  animation: messageIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
 }
 
-@keyframes fadeIn {
+@keyframes messageIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(15px);
   }
   to {
     opacity: 1;
@@ -21,82 +22,112 @@
 }
 
 .userMessage {
-  background-color: #e3f2fd;
-  border-left: 4px solid #2196f3;
-  margin-left: 10%;
+  background: linear-gradient(135deg, #1a0a10 0%, #0f0508 100%);
+  border: 1px solid rgba(255, 10, 60, 0.3);
+  border-left: 4px solid #ff0a3c;
+  margin-left: 8%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.userMessage::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, #ff0a3c, transparent);
+  opacity: 0.5;
 }
 
 .assistantMessage {
-  background-color: #f5f5f5;
-  border-left: 4px solid #4caf50;
-  margin-right: 10%;
+  background: linear-gradient(145deg, #151515 0%, #0d0d0d 100%);
+  border: 1px solid #222;
+  border-left: 4px solid #444;
+  margin-right: 8%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .messageHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
   font-size: 0.875rem;
 }
 
 .role {
-  font-weight: 600;
-  color: #333;
+  font-weight: 700;
+  color: #ff0a3c;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+.assistantMessage .role {
+  color: #888;
 }
 
 .timestamp {
-  color: #666;
-  font-size: 0.75rem;
+  color: #555;
+  font-size: 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .messageContent {
-  color: #222;
+  color: #e0e0e0;
 }
 
 .selectedTextIndicator {
   margin-bottom: 1rem;
-  padding: 0.75rem;
-  background-color: rgba(255, 193, 7, 0.1);
-  border-left: 3px solid #ffc107;
-  border-radius: 4px;
+  padding: 1rem;
+  background: linear-gradient(135deg, #1a0f05 0%, #0f0a03 100%);
+  border-left: 3px solid #ff6b00;
+  border-radius: 8px;
 }
 
 .selectedTextIndicator strong {
   display: block;
   margin-bottom: 0.5rem;
-  color: #f57c00;
-  font-size: 0.875rem;
+  color: #ff6b00;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .selectedTextQuote {
   margin: 0;
-  padding: 0.5rem;
+  padding: 0.75rem;
   font-style: italic;
-  color: #555;
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 4px;
+  color: #aaa;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
   font-size: 0.875rem;
-  line-height: 1.5;
+  line-height: 1.6;
+  border-left: 2px solid #ff6b00;
 }
 
 .content {
-  line-height: 1.6;
+  line-height: 1.7;
   white-space: pre-wrap;
   word-wrap: break-word;
+  font-size: 0.95rem;
 }
 
 .sources {
-  margin-top: 1rem;
+  margin-top: 1.25rem;
   padding-top: 1rem;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #222;
 }
 
 .sourcesTitle {
   display: block;
-  margin-bottom: 0.5rem;
-  color: #555;
-  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+  color: #ff0a3c;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .sourcesList {
@@ -106,50 +137,34 @@
 }
 
 .sourceItem {
-  padding: 0.5rem;
+  padding: 0.75rem;
   margin-bottom: 0.5rem;
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 4px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #111 100%);
+  border: 1px solid #222;
+  border-radius: 10px;
   font-size: 0.875rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: all 0.2s ease;
+}
+
+.sourceItem:hover {
+  border-color: rgba(255, 10, 60, 0.3);
+  transform: translateX(4px);
 }
 
 .sourceLocation {
-  color: #1976d2;
-  font-weight: 500;
+  color: #ff6b87;
+  font-weight: 600;
+  font-size: 0.85rem;
 }
 
 .similarityScore {
-  color: #666;
-  font-size: 0.75rem;
-  font-style: italic;
-}
-
-/* Dark mode support (if Docusaurus has dark theme) */
-[data-theme='dark'] .userMessage {
-  background-color: #1e3a5f;
-  border-left-color: #64b5f6;
-}
-
-[data-theme='dark'] .assistantMessage {
-  background-color: #1e1e1e;
-  border-left-color: #81c784;
-}
-
-[data-theme='dark'] .messageContent {
-  color: #e0e0e0;
-}
-
-[data-theme='dark'] .role {
-  color: #e0e0e0;
-}
-
-[data-theme='dark'] .timestamp {
-  color: #999;
-}
-
-[data-theme='dark'] .sourceLocation {
-  color: #64b5f6;
+  color: #555;
+  font-size: 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
+  background: #0a0a0a;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
 }

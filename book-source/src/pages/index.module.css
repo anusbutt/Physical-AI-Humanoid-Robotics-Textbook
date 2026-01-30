@@ -1,18 +1,63 @@
 /**
- * CSS files with the .module.css suffix will be treated as CSS modules
- * and scoped locally.
+ * Homepage Styles - Gen-Z Dark Theme with Neon Red
  */
 
 .heroBanner {
-  padding: 4rem 0;
+  padding: 6rem 0;
   text-align: center;
   position: relative;
   overflow: hidden;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-@media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
+/* Animated background grid */
+.heroBanner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    linear-gradient(rgba(255, 10, 60, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 10, 60, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+  0% {
+    transform: perspective(500px) rotateX(60deg) translateY(0);
+  }
+  100% {
+    transform: perspective(500px) rotateX(60deg) translateY(50px);
+  }
+}
+
+/* Floating particles effect */
+.heroBanner::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(255, 10, 60, 0.15) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0.8;
   }
 }
 
@@ -20,4 +65,179 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.modules {
+  padding: 6rem 0;
+  background: linear-gradient(180deg, #0a0a0a 0%, #080808 50%, #0a0a0a 100%);
+  position: relative;
+}
+
+.modules::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 10, 60, 0.3), transparent);
+}
+
+.moduleCard {
+  margin-bottom: 2rem;
+}
+
+.moduleCard .card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(145deg, #141414 0%, #0a0a0a 100%);
+  border: 1px solid #1f1f1f;
+  border-radius: 20px;
+  padding: 0.5rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.moduleCard .card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 10, 60, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.moduleCard .card:hover::before {
+  left: 100%;
+}
+
+.moduleCard .card:hover {
+  transform: translateY(-10px) scale(1.02);
+  border-color: rgba(255, 10, 60, 0.4);
+  box-shadow:
+    0 25px 50px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(255, 10, 60, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.moduleCard .card__header {
+  padding: 1.5rem 1.5rem 0.5rem;
+}
+
+.moduleCard .card__header h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ff0a3c;
+  margin-bottom: 0;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+.moduleCard .card__body {
+  flex-grow: 1;
+  padding: 0.5rem 1.5rem 1rem;
+}
+
+.moduleCard .card__body p {
+  color: #888888;
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+.moduleCard .card__footer {
+  border-top: 1px solid #1f1f1f;
+  padding: 1rem 1.5rem 1.5rem;
+  margin-top: auto;
+}
+
+.features {
+  background: #050505;
+  padding: 5rem 0;
+  border-top: 1px solid #1a1a1a;
+  position: relative;
+}
+
+.features::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 10, 60, 0.2), transparent);
+}
+
+.featureCard {
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(145deg, #0f0f0f 0%, #080808 100%);
+  border: 1px solid #1a1a1a;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.featureCard:hover {
+  border-color: rgba(255, 10, 60, 0.3);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.featureCard h3 {
+  font-size: 1.5rem;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.featureCard p {
+  color: #777777;
+  line-height: 1.7;
+}
+
+/* Section titles */
+.sectionTitle {
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #ffffff 0%, #ff0a3c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sectionSubtitle {
+  text-align: center;
+  color: #666666;
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  line-height: 1.7;
+}
+
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 4rem 1rem;
+    min-height: 60vh;
+  }
+
+  .buttons {
+    flex-direction: column;
+  }
+
+  .modules {
+    padding: 4rem 1rem;
+  }
+
+  .features {
+    padding: 3rem 1rem;
+  }
 }

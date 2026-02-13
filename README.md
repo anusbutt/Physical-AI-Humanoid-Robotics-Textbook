@@ -1,5 +1,9 @@
 <div align="center">
 
+<img src="book-source/static/img/hero-banner.png" alt="Physical AI & Humanoid Robotics" width="100%" />
+
+<br />
+
 # Physical AI & Humanoid Robotics Textbook
 
 ### An AI-Powered Interactive Learning Platform

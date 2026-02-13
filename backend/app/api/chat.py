@@ -42,7 +42,9 @@ def validate_conversation_expiry(conversation_created_at: Optional[datetime]) ->
         return  # New conversation, no expiry check needed
 
     now = datetime.utcnow()
-    expiry_date = conversation_created_at + timedelta(days=CONVERSATION_EXPIRY_DAYS)
+    # Strip timezone info to avoid naive vs aware comparison
+    created_at = conversation_created_at.replace(tzinfo=None) if conversation_created_at.tzinfo else conversation_created_at
+    expiry_date = created_at + timedelta(days=CONVERSATION_EXPIRY_DAYS)
 
     if now > expiry_date:
         logger.warning(f"Conversation expired (created: {conversation_created_at}, now: {now})")

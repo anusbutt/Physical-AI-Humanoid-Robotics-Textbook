@@ -14,6 +14,9 @@ jobs:
       - name: Checkout GitHub repo
         uses: actions/checkout@v4
 
+      - name: Install huggingface_hub
+        run: pip install huggingface_hub
+
       - name: Push backend to HF Space
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
@@ -22,9 +25,8 @@ jobs:
           git config --global user.email "ci@github.com"
           git config --global user.name "GitHub Actions"
 
-          # Store HF credentials for git
-          git config --global credential.helper store
-          echo "https://anusbutt:$HF_TOKEN@huggingface.co" > ~/.git-credentials
+          # Login to HF using the CLI (sets up proper auth)
+          huggingface-cli login --token $HF_TOKEN --add-to-git-credential
 
           # Clone HF Space repo
           git clone https://huggingface.co/spaces/anusbutt/rag-chatbot hf-space

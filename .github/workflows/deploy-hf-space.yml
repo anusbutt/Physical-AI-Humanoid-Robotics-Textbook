@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'backend/**'
+  workflow_dispatch: # Allow manual trigger
 
 jobs:
   deploy:
@@ -21,8 +22,12 @@ jobs:
           git config --global user.email "ci@github.com"
           git config --global user.name "GitHub Actions"
 
+          # Store HF credentials for git
+          git config --global credential.helper store
+          echo "https://anusbutt:$HF_TOKEN@huggingface.co" > ~/.git-credentials
+
           # Clone HF Space repo
-          git clone https://anusbutt:$HF_TOKEN@huggingface.co/spaces/anusbutt/rag-chatbot hf-space
+          git clone https://huggingface.co/spaces/anusbutt/rag-chatbot hf-space
 
           # Clear old files (keep .git directory)
           cd hf-space
@@ -32,9 +37,6 @@ jobs:
           cp ../backend/Dockerfile .
           cp ../backend/requirements.txt .
           cp -r ../backend/app ./app
-
-          # Set remote URL with token explicitly for push
-          git remote set-url origin https://anusbutt:$HF_TOKEN@huggingface.co/spaces/anusbutt/rag-chatbot
 
           # Push to HF Space
           git add .

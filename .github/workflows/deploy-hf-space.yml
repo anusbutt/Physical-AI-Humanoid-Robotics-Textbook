@@ -22,8 +22,8 @@ jobs:
           git config --global user.email "ci@github.com"
           git config --global user.name "GitHub Actions"
 
-          # Clone HF Space repo (public read)
-          git clone https://huggingface.co/spaces/anusbutt/rag-chatbot hf-space
+          # Clone HF Space repo using token in URL
+          git clone "https://anusbutt:${HF_TOKEN}@huggingface.co/spaces/anusbutt/rag-chatbot" hf-space
 
           # Clear old files (keep .git directory)
           cd hf-space
@@ -34,9 +34,23 @@ jobs:
           cp ../backend/requirements.txt .
           cp -r ../backend/app ./app
 
+          # Recreate HF Space README.md (required for Space config)
+          cat > README.md << 'READMEEOF'
+          ---
+          title: RAG Chatbot
+          emoji: 🤖
+          colorFrom: blue
+          colorTo: indigo
+          sdk: docker
+          app_port: 7860
+          pinned: false
+          ---
+          # Physical AI & Humanoid Robotics RAG Chatbot
+          READMEEOF
+
           # Commit
           git add .
           git commit -m "Deploy from GitHub Actions - $(date -u +%Y-%m-%dT%H:%M:%SZ)" || echo "No changes"
 
-          # Push directly with token in URL (bypass remote)
-          git push "https://anusbutt:${HF_TOKEN}@huggingface.co/spaces/anusbutt/rag-chatbot" main
+          # Push (remote already has token from clone)
+          git push origin main

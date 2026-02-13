@@ -83,6 +83,16 @@ class RAGService:
         """
         logger.info(f"Processing query: {user_query[:100]}...")
 
+        # Check for greetings/casual messages before RAG pipeline
+        greeting_response = self._check_greeting(user_query)
+        if greeting_response:
+            return {
+                'response': greeting_response,
+                'sources': [],
+                'retrieved_chunks': 0,
+                'used_selected_text': False
+            }
+
         # Validate and sanitize selected text
         sanitized_selected_text = None
         if selected_text:
@@ -405,6 +415,46 @@ Please provide a helpful answer based on the context above."""
                 seen.add(key)
 
         return sources
+
+    def _check_greeting(self, query: str) -> Optional[str]:
+        """
+        Detect greetings and casual messages, return a friendly response.
+
+        Returns None if the query is not a greeting.
+        """
+        query_lower = query.strip().lower().rstrip('!?.,:;')
+        greetings = {
+            'hi', 'hello', 'hey', 'hola', 'howdy', 'sup', 'yo',
+            'good morning', 'good afternoon', 'good evening', 'good night',
+            'whats up', "what's up", 'how are you', 'how r u',
+            'greetings', 'hii', 'hiii', 'helloo', 'hellooo',
+            'thanks', 'thank you', 'thank u', 'thx', 'ty',
+            'bye', 'goodbye', 'see you', 'see ya',
+        }
+
+        if query_lower in greetings:
+            if query_lower in {'thanks', 'thank you', 'thank u', 'thx', 'ty'}:
+                return (
+                    "You're welcome! Happy to help. Feel free to ask me anything about "
+                    "ROS2, sensors, NVIDIA Isaac Sim, or vision-language-action models. "
+                    "I'm here to help you learn! 🤖"
+                )
+            if query_lower in {'bye', 'goodbye', 'see you', 'see ya'}:
+                return (
+                    "Goodbye! Good luck with your studies on Physical AI & Humanoid Robotics. "
+                    "Come back anytime you have questions! 👋"
+                )
+            return (
+                "Hello! 👋 I'm your AI assistant for the Physical AI & Humanoid Robotics course. "
+                "I can help you with:\n\n"
+                "- **ROS2** - nodes, topics, services, communication\n"
+                "- **Sensors & Perception** - cameras, LiDAR, IMU, sensor fusion\n"
+                "- **NVIDIA Isaac Sim** - simulation, synthetic data, navigation\n"
+                "- **Vision-Language-Action Models** - VLAs, robot learning\n\n"
+                "Ask me anything, or select text on a lesson page and ask about it!"
+            )
+
+        return None
 
     def _generate_no_results_response(self, user_query: str) -> str:
         """

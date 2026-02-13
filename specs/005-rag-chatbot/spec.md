@@ -272,9 +272,9 @@ A student uses the chatbot without creating an account. Their conversation histo
 - **FR-036**: System MUST enforce CORS policy restricting origins to `https://anusbutt.github.io` and `http://localhost:3000`
 
 **Deployment & Environment:**
-- **FR-037**: Backend MUST be deployed to Railway with auto-deploy from GitHub repository
+- **FR-037**: Backend MUST be deployed to Hugging Face Spaces (Docker SDK) with auto-deploy from GitHub repository
 - **FR-038**: System MUST use environment variables for all secrets (GEMINI_API_KEY, COHERE_API_KEY, QDRANT_API_KEY, NEON_DATABASE_URL)
-- **FR-039**: System MUST log all queries, responses, and errors to Railway logs for monitoring
+- **FR-039**: System MUST log all queries, responses, and errors to Hugging Face Spaces logs for monitoring
 - **FR-040**: System MUST expose metrics endpoint (optional) for monitoring response times and error rates
 
 ---
@@ -346,9 +346,9 @@ A student uses the chatbot without creating an account. Their conversation histo
 - **SC-019**: 100% of source citations correctly map to the module/lesson where the information appears
 
 **Deployment Success:**
-- **SC-020**: Backend deploys to Railway successfully from GitHub main branch with 0 manual interventions
+- **SC-020**: Backend deploys to Hugging Face Spaces successfully from GitHub main branch with 0 manual interventions
 - **SC-021**: Frontend deploys to GitHub Pages with embedded chat interface visible on all lesson pages
-- **SC-022**: All environment variables (GEMINI_API_KEY, COHERE_API_KEY, QDRANT_API_KEY) are configured in Railway without being committed to git
+- **SC-022**: All environment variables (GEMINI_API_KEY, COHERE_API_KEY, QDRANT_API_KEY) are configured in Hugging Face Spaces Secrets without being committed to git
 
 ---
 
@@ -409,11 +409,11 @@ A student uses the chatbot without creating an account. Their conversation histo
 - Conversation history must fit within this limit or implement FIFO deletion
 
 **Deployment Constraints:**
-- Railway Free Tier: $5/month usage credit, limited CPU/memory
+- Hugging Face Spaces: Free tier with 2 vCPU, 16GB RAM, Docker SDK support, port 7860 required
 - GitHub Pages: Static hosting only (no server-side rendering for frontend)
 
 **Security Requirements:**
-- All API keys MUST be stored as Railway environment variables
+- All API keys MUST be stored as Hugging Face Spaces Secrets (environment variables)
 - CORS MUST restrict origins to production domain + localhost
 - All user inputs MUST be sanitized before processing
 - No PII storage for anonymous users (only conversation text)
@@ -427,7 +427,7 @@ A student uses the chatbot without creating an account. Their conversation histo
 - Cohere API (embeddings provider)
 - Qdrant Cloud (vector database)
 - Neon Serverless Postgres (user data, minimal usage in Phase 2)
-- Railway (backend hosting)
+- Hugging Face Spaces (backend hosting, Docker SDK)
 - GitHub Pages (frontend hosting)
 
 **Internal Dependencies:**
@@ -448,7 +448,7 @@ A student uses the chatbot without creating an account. Their conversation histo
 **None** - All major decisions have been documented in the constitution and confirmed:
 - LLM provider: Gemini 2.5 Flash ✅
 - Embeddings: Cohere embed-english-v3.0 ✅
-- Deployment: Railway ✅
+- Deployment: Hugging Face Spaces (Docker SDK) ✅
 - Authentication: Anonymous-only ✅
 - Storage: Browser localStorage (7 days) ✅
 - Multi-turn: Last 5 messages ✅
@@ -474,8 +474,8 @@ A student uses the chatbot without creating an account. Their conversation histo
    - Mitigation: Implement FIFO deletion and warn users when approaching limit
 
 **Medium-Risk Items:**
-1. **Railway Free Tier Exhaustion**: $5/month credit may run out with heavy usage
-   - Mitigation: Monitor usage closely; implement request caching
+1. **Hugging Face Spaces Cold Start**: Free tier may sleep after inactivity, causing slow first response
+   - Mitigation: Implement lightweight health check pings; inform users of potential cold start delays
 
 2. **Text Selection UX on Mobile**: Tooltip positioning and touch interactions may be challenging
    - Mitigation: Test on mobile devices early; provide fallback (copy-paste into chat)
@@ -502,9 +502,9 @@ Before marking this feature as complete, verify:
 - [ ] All 40 functional requirements (FR-001 to FR-040) are implemented
 - [ ] All 22 success criteria (SC-001 to SC-022) are met with measurement evidence
 - [ ] All edge cases listed have documented handling behavior
-- [ ] Backend deployed to Railway and accessible via public endpoint
+- [ ] Backend deployed to Hugging Face Spaces and accessible via public endpoint
 - [ ] Frontend deployed to GitHub Pages with visible chat interface
-- [ ] All environment variables configured in Railway (not committed to git)
+- [ ] All environment variables configured in Hugging Face Spaces Secrets (not committed to git)
 - [ ] CORS policy restricts to production domain + localhost
 - [ ] Rate limiting enforced (100 req/hour per user)
 - [ ] Error handling tested for all external API failures
@@ -526,7 +526,7 @@ This specification aligns with the following constitutional principles:
 
 ✅ **Phase 2 Goal**: Addresses all requirements (RAG chatbot, OpenAI Agents SDK, Gemini LLM, Cohere embeddings, Qdrant Cloud, Neon Postgres, text selection feature)
 
-✅ **Integrated RAG Architecture**: Uses specified tech stack (Gemini, Cohere, FastAPI, Qdrant, Neon, Railway)
+✅ **Integrated RAG Architecture**: Uses specified tech stack (Gemini, Cohere, FastAPI, Qdrant, Neon, Hugging Face Spaces)
 
 ✅ **Tool-Based Data Retrieval**: Spec defines 5 custom tools (search_book_content, get_selected_text_context, get_lesson_metadata, get_user_profile, save_conversation)
 
@@ -538,6 +538,6 @@ This specification aligns with the following constitutional principles:
 
 ✅ **Quality Standards**: Performance targets (<3s response, <500ms search), security (sanitization, CORS), testing (unit, integration, E2E)
 
-✅ **Deployment Strategy**: Railway backend, GitHub Pages frontend, environment variables for secrets
+✅ **Deployment Strategy**: Hugging Face Spaces backend (Docker SDK), GitHub Pages frontend, environment variables for secrets
 
 ✅ **Spec-Driven Development**: This spec written BEFORE plan/tasks/implementation; no vibe-coding permitted

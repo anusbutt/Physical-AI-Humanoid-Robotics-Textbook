@@ -121,6 +121,16 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ isOpen, onClose })
             <ChatMessage key={index} message={message} />
           ))}
 
+          {/* Typing indicator */}
+          {isLoading && (
+            <div className={styles.typingIndicator}>
+              <span className={styles.typingDot} />
+              <span className={styles.typingDot} />
+              <span className={styles.typingDot} />
+              <span className={styles.typingLabel}>AI is thinking...</span>
+            </div>
+          )}
+
           {/* Scroll anchor */}
           <div ref={messagesEndRef} />
         </div>

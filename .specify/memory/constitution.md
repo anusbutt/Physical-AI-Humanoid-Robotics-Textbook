@@ -1,6 +1,6 @@
 <!--
 Sync Impact Report:
-- Version change: 1.0.0 → 2.0.0 → 2.0.1 → 2.1.0
+- Version change: 1.0.0 → 2.0.0 → 2.0.1 → 2.1.0 → 2.2.0
 - Ratified: 2025-12-28
 - Last Amendment: 2025-12-30
 - Rationale: Enhanced Phase 2 specifications with comprehensive RAG chatbot architecture; specified Railway as backend platform; changed to Gemini LLM and Cohere embeddings
@@ -24,6 +24,10 @@ Sync Impact Report:
   * (v2.1.0) Changed embeddings provider from OpenAI to Cohere (embed-english-v3.0)
   * (v2.1.0) Updated environment variables (GEMINI_API_KEY, COHERE_API_KEY)
   * (v2.1.0) Updated embedding vector dimensions (1536 → 1024 for Cohere)
+  * (v2.2.0) Migrated backend deployment from Railway to Hugging Face Spaces (Docker SDK)
+  * (v2.2.0) Updated all deployment references: Railway → Hugging Face Spaces
+  * (v2.2.0) Added Docker configuration requirements (port 7860, Dockerfile)
+  * (v2.2.0) Updated secrets management: Railway env vars → HF Spaces Secrets
 - Templates requiring updates:
   ✅ plan-template.md - Constitution Check section aligns with principles
   ✅ spec-template.md - User stories support book chapter planning and RAG chatbot
@@ -493,13 +497,13 @@ The RAG chatbot MUST be built with the following technology stack:
 - **AI Agent Framework**: OpenAI Agents SDK for conversational intelligence and tool orchestration
 - **LLM Provider**: Google Gemini (`gemini-2.5-flash`) via OpenAI-compatible API
 - **Embeddings Provider**: Cohere (free tier) for semantic content embeddings
-- **Backend Service**: FastAPI (Python 3.11+) for API endpoints and business logic
+- **Backend Service**: FastAPI (Python 3.11+) for API endpoints and business logic, deployed to Hugging Face Spaces (Docker SDK)
 - **Vector Database**: Qdrant Cloud Free Tier (1GB cluster) for semantic content retrieval
 - **User Database**: Neon Serverless Postgres for user profiles, conversations, and preferences
 - **Frontend Integration**: Docusaurus React components for embedded chat interface
 - **Custom Tools**: Python functions with `@function_tool` decorator for data access
 
-**Rationale**: Provides scalable, maintainable architecture that leverages the RAG-ready content from Phase 1 while enabling contextual responses based on user-selected text. Gemini 2.5 Flash offers fast, cost-effective responses. Cohere free tier provides high-quality embeddings at no cost. Qdrant Cloud Free Tier provides sufficient capacity for all Phase 1 content (~16 lessons).
+**Rationale**: Provides scalable, maintainable architecture that leverages the RAG-ready content from Phase 1 while enabling contextual responses based on user-selected text. Gemini 2.5 Flash offers fast, cost-effective responses. Cohere free tier provides high-quality embeddings at no cost. Qdrant Cloud Free Tier provides sufficient capacity for all Phase 1 content (~16 lessons). Hugging Face Spaces (Docker SDK) provides free hosting with 2 vCPU and 16GB RAM.
 
 #### II. Tool-Based Data Retrieval (OpenAI Agents SDK Pattern)
 
@@ -865,11 +869,12 @@ Before any Phase 2 implementation, create a detailed spec following the spec-tem
    - Create health check endpoint
 4. **Environment Configuration**:
    ```env
-   OPENAI_API_KEY=sk-...
+   GEMINI_API_KEY=your-gemini-api-key
+   COHERE_API_KEY=your-cohere-api-key
    QDRANT_URL=https://....qdrant.io
    QDRANT_API_KEY=...
    NEON_DATABASE_URL=postgresql://...
-   CORS_ORIGINS=https://anusbutt.github.io
+   CORS_ORIGINS=https://anusbutt.github.io,https://your-space.hf.space
    ```
 
 **Stage 2: Content Embedding Pipeline** (Feature Branch: `feature/rag-content-pipeline`)
@@ -914,10 +919,10 @@ Before any Phase 2 implementation, create a detailed spec following the spec-tem
 5. User acceptance testing
 
 **Stage 7: Deployment** (Merge to Main)
-1. Deploy FastAPI backend to cloud platform (Render/Railway/Vercel)
-2. Update Docusaurus config with backend URL
+1. Deploy FastAPI backend to Hugging Face Spaces (Docker SDK, port 7860)
+2. Update Docusaurus config with Hugging Face Spaces backend URL
 3. Deploy to GitHub Pages (automated via GitHub Actions)
-4. Monitor logs and performance
+4. Monitor logs and performance via HF Spaces dashboard
 5. Document deployment process
 
 ### Quality Standards for Phase 2
@@ -942,13 +947,13 @@ Before any Phase 2 implementation, create a detailed spec following the spec-tem
 - **Input Validation**: Sanitize all user inputs (SQL injection, XSS prevention)
 - **Data Privacy**: No PII stored without explicit consent
 - **Authentication**: Optional JWT-based auth for user tracking
-- **Secrets Management**: Use Railway environment variables (not committed to repository)
+- **Secrets Management**: Use Hugging Face Spaces Secrets (not committed to repository)
 
 **Scalability**:
 - **Concurrent Users**: Handle 50+ concurrent users on free tier resources
 - **Database Connections**: Connection pooling for Neon Postgres
 - **Caching**: Cache lesson metadata and frequently accessed content
-- **Cost Control**: Monitor OpenAI API usage; implement monthly budget alerts
+- **Cost Control**: Monitor Gemini/Cohere API usage; implement monthly budget alerts
 
 #### Content Accuracy & Educational Quality
 
@@ -1021,12 +1026,12 @@ The RAG chatbot will be deployed as an extension to the existing GitHub Pages si
 - **URL**: https://anusbutt.github.io/hackathon-phase-01/
 - **Updates**: Automatic on push to main
 
-**Backend Deployment** (Railway):
-- **Platform**: Railway (free tier with $5/month credit)
-- **Runtime**: Python 3.11+ with FastAPI
-- **Environment Variables**: GEMINI_API_KEY, COHERE_API_KEY, QDRANT_URL, QDRANT_API_KEY, NEON_DATABASE_URL
-- **Endpoint**: Public API endpoint (e.g., https://yourapp.up.railway.app)
-- **Auto-deploy**: Connected to GitHub repository (feature branch or main)
+**Backend Deployment** (Hugging Face Spaces):
+- **Platform**: Hugging Face Spaces (free tier, Docker SDK, 2 vCPU, 16GB RAM)
+- **Runtime**: Python 3.11+ with FastAPI in Docker container, port 7860
+- **Environment Variables**: Configured via HF Spaces Secrets — GEMINI_API_KEY, COHERE_API_KEY, QDRANT_URL, QDRANT_API_KEY, NEON_DATABASE_URL
+- **Endpoint**: Public API endpoint (e.g., https://your-space.hf.space)
+- **Auto-deploy**: Connected to GitHub repository (auto-builds on push)
 
 **Database Services** (Serverless):
 1. **Qdrant Cloud Free Tier**:
@@ -1070,7 +1075,7 @@ hackathon-phase-01/
 │   │   ├── test_tools.py
 │   │   └── test_agent.py
 │   ├── requirements.txt            # Python dependencies
-│   └── Dockerfile                  # Optional: containerization
+│   └── Dockerfile                  # Docker configuration for Hugging Face Spaces (port 7860)
 ├── specs/
 │   └── 005-rag-chatbot/            # NEW: Phase 2 spec
 │       ├── spec.md
@@ -1124,25 +1129,26 @@ backend/venv/
 - [ ] All Phase 2 tests passing (unit + integration)
 - [ ] Qdrant collection populated with embeddings
 - [ ] Neon Postgres schema migrated
-- [ ] Environment variables configured on cloud platform
+- [ ] Environment variables configured in Hugging Face Spaces Secrets
 - [ ] CORS settings restrict to production domain
 - [ ] API rate limiting enabled
 - [ ] Logging and monitoring configured
 
 **Deployment Steps**:
-1. Deploy backend to Railway
+1. Deploy backend to Hugging Face Spaces (Docker SDK, port 7860)
 2. Verify backend health endpoint: `GET /api/health`
 3. Test chat endpoint with sample query: `POST /api/chat/query`
-4. Update Docusaurus config with backend URL (Railway endpoint)
+4. Update Docusaurus config with backend URL (HF Spaces endpoint)
 5. Deploy frontend via GitHub Actions
 6. End-to-end test on production site
-7. Monitor logs for errors via Railway dashboard
+7. Monitor logs for errors via Hugging Face Spaces dashboard
 
 **Post-Deployment**:
-- Monitor OpenAI API usage (set budget alerts)
+- Monitor Gemini/Cohere API usage
 - Track user feedback ratings
-- Review conversation logs weekly
+- Review conversation logs weekly via HF Spaces logs
 - Optimize slow queries if needed
+- Monitor HF Spaces cold start behavior
 
 #### Rollback Strategy
 
@@ -1150,7 +1156,7 @@ If critical issues arise:
 1. Disable chat interface via feature flag in Docusaurus config
 2. Display maintenance message to users
 3. Investigate and fix issue in feature branch
-4. Re-deploy after testing
+4. Re-deploy to Hugging Face Spaces after testing (Docker rebuild)
 5. Re-enable chat interface
 
 ---
@@ -1159,13 +1165,14 @@ If critical issues arise:
 
 ### Constitution Updates
 
-**Version**: 2.1.0
+**Version**: 2.2.0
 **Ratified**: 2025-12-28
-**Last Amended**: 2025-12-30
+**Last Amended**: 2026-02-13
 **Amendments**:
 - v2.0.0 (2025-12-30): Enhanced Phase 2 specifications with detailed RAG chatbot architecture, OpenAI Agents SDK integration, Qdrant Cloud Free Tier configuration, text selection feature implementation, Neon Postgres schema, deployment strategy, and quality standards.
 - v2.0.1 (2025-12-30): Specified Railway as the definitive backend deployment platform (previously Render/Railway/Vercel options).
 - v2.1.0 (2025-12-30): Changed LLM provider to Google Gemini (gemini-2.5-flash) and embeddings provider to Cohere (embed-english-v3.0) for cost-efficiency. Updated environment variables, tech stack, and embedding pipeline specifications.
+- v2.2.0 (2026-02-13): Migrated backend deployment platform from Railway to Hugging Face Spaces (Docker SDK). Railway free trial expired. Updated all deployment references, secrets management, and Docker configuration (port 7860).
 
 ### Phase 2 Compliance Requirements
 

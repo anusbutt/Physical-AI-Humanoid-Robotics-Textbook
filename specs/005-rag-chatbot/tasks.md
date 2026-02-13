@@ -301,7 +301,7 @@ description: "Task list for Phase 2 RAG Chatbot implementation"
 - [ ] **T036** [US1] Add error handling middleware `backend/app/middleware/error_handler.py`
   - Catch all exceptions
   - Return user-friendly error messages (no stack traces)
-  - Log errors to Railway logs
+  - Log errors to Hugging Face Spaces logs
   - Return HTTP 503 for external API failures (Gemini, Qdrant, Cohere)
 
 ### Integration Tests for User Story 1
@@ -454,42 +454,45 @@ description: "Task list for Phase 2 RAG Chatbot implementation"
 
 ---
 
-## Phase 8: Backend Deployment to Railway
+## Phase 8: Backend Deployment to Hugging Face Spaces
 
-**Purpose**: Deploy backend to production Railway environment
+**Purpose**: Deploy backend to production Hugging Face Spaces environment
 
 **Prerequisites**: Phases 3-7 complete (all P1-P2 user stories implemented)
 
-### Railway Setup
+### Hugging Face Spaces Setup
 
-- [ ] **T054** Create Railway account and project
-  - Sign up at https://railway.app/ with GitHub
-  - Create new project
+- [ ] **T054** Create Hugging Face account and Space
+  - Sign up at https://huggingface.co/ (or log in)
+  - Create new Space with Docker SDK
   - Connect GitHub repository `anusbutt/hackathon-phase-01`
-  - Set root directory to `backend/`
+  - Set subdirectory to `backend/` (or configure Dockerfile path)
 
-- [ ] **T055** Configure Railway environment variables
-  - Add all variables from `.env.example`
+- [ ] **T055** Configure Hugging Face Spaces Secrets
+  - Navigate to Space Settings → Secrets
+  - Add all variables from `.env.example`:
   - GEMINI_API_KEY, COHERE_API_KEY, QDRANT_URL, QDRANT_API_KEY, NEON_DATABASE_URL
-  - CORS_ORIGINS=https://anusbutt.github.io,http://localhost:3000
+  - CORS_ORIGINS=https://anusbutt.github.io,https://your-space.hf.space,http://localhost:3000
   - API_RATE_LIMIT=100
 
-- [ ] **T056** Create railway.toml configuration `backend/railway.toml`
-  - Build command: `pip install -r requirements.txt`
-  - Start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-  - Python version: 3.11
+- [ ] **T056** Create Dockerfile for Hugging Face Spaces `backend/Dockerfile`
+  - Base image: `python:3.11-slim`
+  - Install requirements: `pip install --no-cache-dir -r requirements.txt`
+  - Copy app directory
+  - Expose port 7860 (HF Spaces requirement)
+  - Start command: `uvicorn app.main:app --host 0.0.0.0 --port 7860`
 
-- [ ] **T057** Deploy to Railway
-  - Push to main branch → Railway auto-deploys
-  - Monitor deployment logs for errors
-  - Get Railway URL (e.g., `https://hackathon-phase-01.up.railway.app`)
+- [ ] **T057** Deploy to Hugging Face Spaces
+  - Push to main branch → HF Spaces auto-builds Docker image and deploys
+  - Monitor build logs for errors in HF Space dashboard
+  - Get Space URL (e.g., `https://your-space.hf.space`)
 
-- [ ] **T058** Verify Railway deployment
-  - Visit `https://yourapp.up.railway.app/api/health`
+- [ ] **T058** Verify Hugging Face Spaces deployment
+  - Visit `https://your-space.hf.space/api/health`
   - Expected: `{"status": "healthy", "services": {"qdrant": true, "gemini": true, "cohere": true}}`
-  - Test chat endpoint with curl: `curl -X POST https://yourapp.up.railway.app/api/chat/query -H "Content-Type: application/json" -d '{"query": "What is ROS2?"}'`
+  - Test chat endpoint with curl: `curl -X POST https://your-space.hf.space/api/chat/query -H "Content-Type: application/json" -d '{"query": "What is ROS2?"}'`
 
-**Checkpoint**: Backend deployed to Railway and accessible via public URL
+**Checkpoint**: Backend deployed to Hugging Face Spaces and accessible via public URL
 
 ---
 
@@ -497,7 +500,7 @@ description: "Task list for Phase 2 RAG Chatbot implementation"
 
 **Purpose**: Add chat interface components to existing Docusaurus site
 
-**Prerequisites**: Phase 8 complete (backend deployed, URL available)
+**Prerequisites**: Phase 8 complete (backend deployed to Hugging Face Spaces, URL available)
 
 ### Frontend Infrastructure
 
@@ -513,7 +516,7 @@ description: "Task list for Phase 2 RAG Chatbot implementation"
 - [ ] **T061** [P] Create API client `book-source/src/services/chatApi.ts`
   - Method: `sendQuery(query, selectedText?, lessonId?, conversationHistory?) → Promise<ChatQueryResponse>`
   - Method: `sendFeedback(conversationId, rating, comment?) → Promise<void>`
-  - Use fetch API, target Railway backend URL (from docusaurus.config.ts customFields)
+  - Use fetch API, target Hugging Face Spaces backend URL (from docusaurus.config.ts customFields)
   - Handle errors (network, 429, 503)
 
 ### User Story 1 & 2: Chat Interface + Text Selection (P1)
@@ -572,7 +575,7 @@ description: "Task list for Phase 2 RAG Chatbot implementation"
 ### Docusaurus Integration
 
 - [ ] **T069** Update docusaurus.config.ts with backend URL `book-source/docusaurus.config.ts`
-  - Add to customFields: `backendUrl: 'https://yourapp.up.railway.app'`
+  - Add to customFields: `backendUrl: 'https://your-space.hf.space'`
   - Access in components via `useDocusaurusContext()`
 
 - [ ] **T070** Add ChatInterface to Docusaurus layout `book-source/src/theme/Root.tsx`
@@ -702,7 +705,7 @@ description: "Task list for Phase 2 RAG Chatbot implementation"
   - Verify no SQL injection vectors (using parameterized queries in Postgres)
 
 - [ ] **T087** Verify CORS configuration `backend/app/middleware/cors.py`
-  - Allowed origins: Only `https://anusbutt.github.io` and `http://localhost:3000`
+  - Allowed origins: Only `https://anusbutt.github.io`, `https://your-space.hf.space`, and `http://localhost:3000`
   - No wildcard "*" allowed
   - Test CORS with curl from unauthorized origin → Should block
 
@@ -710,6 +713,7 @@ description: "Task list for Phase 2 RAG Chatbot implementation"
   - Run: `git log --all --full-history -- "*/.env"`
   - Expected: No results (no .env files ever committed)
   - Verify `.env` in `.gitignore`
+  - Verify all secrets configured in Hugging Face Spaces Secrets
 
 **Checkpoint**: Security hardening complete, rate limiting active
 
@@ -722,11 +726,11 @@ description: "Task list for Phase 2 RAG Chatbot implementation"
 ### Documentation
 
 - [ ] **T089** Create deployment guide `specs/005-rag-chatbot/deployment.md`
-  - Backend deployment to Railway (step-by-step)
-  - Environment variable configuration
+  - Backend deployment to Hugging Face Spaces via Docker SDK (step-by-step)
+  - Hugging Face Spaces Secrets configuration
   - Frontend update (add backend URL)
   - Embedding pipeline (one-time setup)
-  - Troubleshooting common issues
+  - Troubleshooting common issues (cold starts, port 7860, Docker build)
 
 - [ ] **T090** Update main README `README.md`
   - Add Phase 2 section
@@ -742,7 +746,7 @@ description: "Task list for Phase 2 RAG Chatbot implementation"
 ### Final Deployment
 
 - [ ] **T092** Deploy frontend to GitHub Pages
-  - Update `book-source/docusaurus.config.ts` with production backend URL
+  - Update `book-source/docusaurus.config.ts` with Hugging Face Spaces backend URL
   - Commit and push to main
   - GitHub Actions auto-deploys
   - Verify: `https://anusbutt.github.io/hackathon-phase-01/`
@@ -755,10 +759,11 @@ description: "Task list for Phase 2 RAG Chatbot implementation"
   - Test selected text feature
   - Test multi-turn conversation (3+ messages)
 
-- [ ] **T094** Monitor Railway logs
+- [ ] **T094** Monitor Hugging Face Spaces logs
   - Check for errors, warnings
   - Verify request counts (should be <1500/day for Gemini free tier)
   - Monitor Cohere usage (should be <10,000/month)
+  - Monitor Space uptime and cold start behavior
 
 **Checkpoint**: Phase 2 complete, deployed to production
 
@@ -823,7 +828,7 @@ description: "Task list for Phase 2 RAG Chatbot implementation"
 ### Security Audit
 
 - [ ] **T104** Manual security review
-  - Verify all API keys in Railway environment variables (not in git)
+  - Verify all API keys in Hugging Face Spaces Secrets (not in git)
   - Verify CORS restricts to production domain only
   - Test XSS: Submit query with `<script>alert('xss')</script>` → Should be escaped
   - Test SQL injection (if any direct SQL): Submit query with `'; DROP TABLE users;--` → Should be sanitized
@@ -846,7 +851,7 @@ description: "Task list for Phase 2 RAG Chatbot implementation"
 2. **Phase 1: Foundational** → Phase 2
 3. **Phase 2: Embedding Pipeline** → Phase 3-7 (user stories)
 4. **Phase 3-7: User Stories** → Phase 8 (backend deployment)
-5. **Phase 8: Backend Deployment** → Phase 9 (frontend)
+5. **Phase 8: HF Spaces Deployment** → Phase 9 (frontend)
 6. **Phase 9: Frontend** → Phase 10 (E2E tests)
 7. **Phase 10: E2E Tests** → Phase 11-13 (polish, docs, final deployment)
 
@@ -864,7 +869,7 @@ Fastest path to working chatbot:
 3. Phase 2: Embedding Pipeline (T021-T027) - **1 day**
 4. Phase 3: User Story 1 (T028-T038) - **2 days**
 5. Phase 4: User Story 2 (T039-T043) - **1 day**
-6. Phase 8: Backend Deployment (T054-T058) - **0.5 day**
+6. Phase 8: HF Spaces Deployment (T054-T058) - **0.5 day**
 7. Phase 9: Frontend (T059-T071) - **2 days**
 8. Phase 10: E2E Tests (T072-T077) - **1 day**
 9. Phase 13: Final Deployment (T092-T094) - **0.5 day**
@@ -899,7 +904,7 @@ Add after MVP:
 - **Checkpoint**: P1 stories complete (backend only)
 
 **Week 3: Deployment + Frontend**
-- Day 7: Phase 8 (Backend Deployment to Railway)
+- Day 7: Phase 8 (Backend Deployment to Hugging Face Spaces)
 - Days 8-9: Phase 9 (Frontend Components)
 - Day 10: Phase 10 (E2E Tests)
 - **Checkpoint**: MVP deployed to production
@@ -928,7 +933,7 @@ Add after MVP:
 - [ ] Manual QA passes (100 test queries)
 - [ ] 95% response accuracy (manual review)
 - [ ] 0% hallucinations (no contradictions with book content)
-- [ ] Railway costs <$5/month (free tier)
+- [ ] Hugging Face Spaces running on free tier without issues
 - [ ] Documentation complete (README, deployment guide, API docs)
 
 ---
@@ -941,7 +946,7 @@ Add after MVP:
 - **Commit frequently**: After each task or logical group
 - **Checkpoints**: Stop and validate independently before proceeding
 - **Environment**: Always use `.env` for secrets (never commit)
-- **Railway**: Monitor logs during deployment for early error detection
+- **Hugging Face Spaces**: Monitor build and runtime logs during deployment for early error detection
 
 ---
 

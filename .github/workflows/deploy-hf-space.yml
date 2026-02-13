@@ -1,0 +1,39 @@
+name: Deploy Backend to HF Spaces
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout GitHub repo
+        uses: actions/checkout@v4
+
+      - name: Push backend to HF Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          # Configure git
+          git config --global user.email "ci@github.com"
+          git config --global user.name "GitHub Actions"
+
+          # Clone HF Space repo
+          git clone https://anusbutt:$HF_TOKEN@huggingface.co/spaces/anusbutt/rag-chatbot hf-space
+
+          # Clear old files (keep .git)
+          cd hf-space
+          find . -not -path './.git/*' -not -name '.git' -delete 2>/dev/null || true
+
+          # Copy backend files
+          cp ../backend/Dockerfile .
+          cp ../backend/requirements.txt .
+          cp -r ../backend/app ./app
+
+          # Push to HF Space
+          git add .
+          git commit -m "Deploy from GitHub Actions - $(date -u +%Y-%m-%dT%H:%M:%SZ)" || echo "No changes"
+          git push

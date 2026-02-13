@@ -11,17 +11,17 @@ import type {
 } from '../types/chat';
 
 /**
- * Get backend API URL from environment or default to Railway URL
+ * Get backend API URL from environment or default to Hugging Face Spaces URL
  */
 const getBackendUrl = (): string => {
   // For local development, use localhost
   if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
-    return 'http://localhost:8001';
+    return 'http://localhost:7860';
   }
 
-  // For production, use Railway backend URL (deployed January 3, 2026)
-  // Note: process.env is not available in browser, so we hardcode the production URL
-  return 'https://virtuous-creativity-production.up.railway.app';
+  // For production, use Hugging Face Spaces backend URL
+  // TODO: Update with actual HF Spaces URL after deployment
+  return 'https://anusbutt-rag-chatbot.hf.space';
 };
 
 const BACKEND_URL = getBackendUrl();

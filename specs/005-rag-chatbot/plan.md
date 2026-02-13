@@ -19,7 +19,7 @@ Build and embed a Retrieval-Augmented Generation (RAG) chatbot within the publis
 - **LLM**: Google Gemini (gemini-2.5-flash) via OpenAI Agents SDK with custom tools
 - **Embeddings**: Cohere (embed-english-v3.0) for semantic content vectors
 - **Vector DB**: Qdrant Cloud Free Tier for RAG content retrieval
-- **Backend**: FastAPI (Python 3.11+) deployed to Railway
+- **Backend**: FastAPI (Python 3.11+) deployed to Hugging Face Spaces (Docker SDK)
 - **Frontend**: React/TypeScript components embedded in Docusaurus site
 - **Storage**: Browser localStorage (anonymous users), Neon Postgres (future auth)
 
@@ -44,7 +44,7 @@ Build and embed a Retrieval-Augmented Generation (RAG) chatbot within the publis
 - Integration: End-to-end tests for chat flow
 
 **Target Platform**:
-- Backend: Railway (Python runtime, auto-deploy from GitHub)
+- Backend: Hugging Face Spaces (Docker SDK, port 7860, auto-deploy from GitHub)
 - Frontend: GitHub Pages (static site with embedded chat)
 - Databases: Qdrant Cloud, Neon Serverless Postgres
 
@@ -61,13 +61,13 @@ Build and embed a Retrieval-Augmented Generation (RAG) chatbot within the publis
 - Gemini API: 15 requests/min, 1500/day (free tier)
 - Cohere API: 100 calls/min, 10,000/month (free tier)
 - Qdrant Cloud: 1GB storage (free tier)
-- Railway: $5/month usage credit (free tier)
+- Hugging Face Spaces: Free tier (2 vCPU, 16GB RAM, Docker SDK, port 7860)
 - Browser localStorage: ~5-10MB per domain
 - Rate limit: 100 requests/hour per user
 
 **Scale/Scope**:
 - Content: 16 lessons, ~320 embedded chunks (500-1000 tokens each)
-- Users: Anonymous only (Phase 2), unlimited concurrent (within Railway limits)
+- Users: Anonymous only (Phase 2), unlimited concurrent (within Hugging Face Spaces limits)
 - Conversations: Up to 7 days retention per user (browser-based)
 - API endpoints: 3 primary (`/api/chat/query`, `/api/chat/feedback`, `/api/health`)
 
@@ -81,7 +81,7 @@ Build and embed a Retrieval-Augmented Generation (RAG) chatbot within the publis
 
 | Principle | Status | Evidence |
 |-----------|--------|----------|
-| I. Integrated RAG Architecture | ✅ PASS | Uses mandated tech stack: OpenAI Agents SDK, Gemini LLM, Cohere embeddings, FastAPI, Qdrant Cloud Free Tier, Neon Postgres, Railway |
+| I. Integrated RAG Architecture | ✅ PASS | Uses mandated tech stack: OpenAI Agents SDK, Gemini LLM, Cohere embeddings, FastAPI, Qdrant Cloud Free Tier, Neon Postgres, Hugging Face Spaces |
 | II. Tool-Based Data Retrieval | ✅ PASS | Plan includes 5 custom tools with `@function_tool` decorator: search_book_content, get_selected_text_context, get_lesson_metadata, get_user_profile, save_conversation |
 | III. Pure RAG Implementation | ✅ PASS | Qdrant Cloud for vectors (no OpenAI vector storage), Cohere embeddings, chunking strategy defined (500-1000 tokens, H2/H3 sections) |
 | IV. Frontend-Backend Integration | ✅ PASS | React components (ChatInterface.tsx, TextSelectionHandler.tsx), API endpoints defined, SSE streaming planned |
@@ -97,10 +97,10 @@ Build and embed a Retrieval-Augmented Generation (RAG) chatbot within the publis
 | Content Accuracy | 95% verifiable responses, 0% hallucinations | RAG with similarity threshold >0.7, source citations mandatory |
 
 ✅ **Deployment Strategy Compliance**:
-- Backend: Railway ✅
+- Backend: Hugging Face Spaces (Docker SDK) ✅
 - Frontend: GitHub Pages (embedded in Docusaurus) ✅
 - Environment variables: GEMINI_API_KEY, COHERE_API_KEY, QDRANT_API_KEY, NEON_DATABASE_URL ✅
-- Auto-deploy: GitHub Actions for frontend, Railway GitHub integration for backend ✅
+- Auto-deploy: GitHub Actions for frontend, Hugging Face Spaces GitHub integration for backend ✅
 
 **No violations found. Constitution compliance: PASS**
 
@@ -188,8 +188,7 @@ hackathon-phase-01/
 │   ├── requirements.txt              # Python dependencies
 │   ├── requirements-dev.txt          # Dev dependencies (pytest, black, ruff)
 │   ├── .env.example                  # Environment variable template
-│   ├── Dockerfile                    # Optional: for local Docker testing
-│   └── railway.toml                  # Railway deployment configuration
+│   └── Dockerfile                    # Docker configuration for Hugging Face Spaces
 │
 ├── book-source/                      # EXISTING: Phase 1 Docusaurus site
 │   ├── docs/                         # Educational content (Phase 1)
@@ -224,13 +223,13 @@ hackathon-phase-01/
 ├── .github/
 │   └── workflows/
 │       ├── deploy.yml                # UPDATED: Add backend tests
-│       └── backend-deploy.yml        # NEW: Railway deployment workflow
+│       └── backend-deploy.yml        # NEW: HF Spaces deployment workflow
 │
 ├── .gitignore                        # UPDATED: Add backend/.env, backend/__pycache__
 └── README.md                         # UPDATED: Phase 2 documentation
 ```
 
-**Structure Decision**: Web application (Option 2) with separate `backend/` and `book-source/` (frontend) directories. Backend is a new Python FastAPI service. Frontend extends existing Docusaurus site with React components. This separation aligns with constitution requirement for Railway (backend) and GitHub Pages (frontend) deployment.
+**Structure Decision**: Web application (Option 2) with separate `backend/` and `book-source/` (frontend) directories. Backend is a new Python FastAPI service. Frontend extends existing Docusaurus site with React components. This separation aligns with constitution requirement for Hugging Face Spaces (backend) and GitHub Pages (frontend) deployment.
 
 ---
 
@@ -260,7 +259,7 @@ hackathon-phase-01/
 └────────────────────────────┼────────────────────────────────────┘
                              ↓
 ┌─────────────────────────────────────────────────────────────────┐
-│            FastAPI Backend (Railway)                             │
+│         FastAPI Backend (Hugging Face Spaces)                    │
 │  ┌────────────────────────────────────────────────────────────┐ │
 │  │  API Layer (routers/)                                      │ │
 │  │  - POST /api/chat/query                                    │ │
@@ -469,7 +468,7 @@ embeddings = response.embeddings  # [[float * 1024], ...]
 **Alternatives Considered**:
 - Pinecone: Free tier only 1 index, slower search
 - Weaviate: More complex setup, overkill for our scale
-- ChromaDB (local): Requires hosting, not suitable for Railway deployment
+- ChromaDB (local): Requires hosting, not suitable for Hugging Face Spaces deployment
 - PostgreSQL pgvector: Slower than dedicated vector DB, complex setup
 
 **Implementation Pattern**:
@@ -1151,7 +1150,7 @@ def save_conversation(
 - Phase 3+: Better-auth integration
 
 **Secrets Management**:
-- All API keys in Railway environment variables
+- All API keys in Hugging Face Spaces Secrets (environment variables)
 - Never commit secrets to git (.env in .gitignore)
 - .env.example for documentation only
 
@@ -1163,7 +1162,7 @@ def save_conversation(
 **Error Handling**:
 - No stack traces in production responses
 - Generic error messages to users
-- Detailed logging to Railway logs (server-side only)
+- Detailed logging to Hugging Face Spaces logs (server-side only)
 
 ---
 
@@ -1175,7 +1174,7 @@ def save_conversation(
 - Health check endpoint for deployment verification
 
 **Monitoring**:
-- Railway logs for all requests, errors, warnings
+- Hugging Face Spaces logs for all requests, errors, warnings
 - Optional: Metrics endpoint for response times, error rates (future)
 
 **Data Integrity**:
@@ -1193,7 +1192,7 @@ def save_conversation(
 - Conversations: Browser-only (no server storage)
 
 **Scaling Strategy** (future phases):
-- Railway: Upgrade to paid tier ($5-20/month for higher limits)
+- Hugging Face Spaces: Upgrade to paid tier for dedicated GPU/CPU resources
 - Qdrant: Migrate to paid tier if >1GB needed
 - Caching: Add Redis for frequent queries
 - Database: Upgrade Neon Postgres to paid tier
@@ -1299,7 +1298,7 @@ Before deployment:
 - [ ] Test browser compatibility (Chrome, Firefox, Safari, Edge)
 - [ ] Test mobile responsiveness (text selection, chat interface)
 - [ ] Test dark mode compatibility
-- [ ] Verify CORS policy (frontend on GitHub Pages → backend on Railway)
+- [ ] Verify CORS policy (frontend on GitHub Pages → backend on Hugging Face Spaces)
 - [ ] Verify no secrets in git history (`git log | grep -i "api_key"`)
 
 ---
@@ -1412,30 +1411,44 @@ Before deployment:
 
 ---
 
-### Phase 4: Railway Deployment (Backend)
+### Phase 4: Hugging Face Spaces Deployment (Backend)
 
-1. **Create Railway account**:
-   - Visit: https://railway.app/
-   - Sign up with GitHub
+1. **Create Hugging Face account and Space**:
+   - Visit: https://huggingface.co/
+   - Sign up or log in
+   - Create new Space with Docker SDK
 
-2. **Create new project**:
-   - Connect GitHub repository
-   - Select `backend/` directory as root
+2. **Create Dockerfile** in `backend/`:
+   ```dockerfile
+   FROM python:3.11-slim
 
-3. **Configure environment variables**:
+   WORKDIR /app
+
+   COPY requirements.txt .
+   RUN pip install --no-cache-dir -r requirements.txt
+
+   COPY app/ app/
+
+   EXPOSE 7860
+
+   CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "7860"]
+   ```
+
+3. **Configure Hugging Face Spaces Secrets** (Settings → Secrets):
    - GEMINI_API_KEY
    - COHERE_API_KEY
    - QDRANT_URL
    - QDRANT_API_KEY
    - NEON_DATABASE_URL
-   - CORS_ORIGINS (include production domain)
+   - CORS_ORIGINS (include production domain + HF Spaces URL)
 
 4. **Deploy**:
-   - Railway auto-deploys on git push to main
-   - Monitor logs for errors
+   - Connect GitHub repository to Hugging Face Space
+   - HF auto-builds Docker image and deploys on git push
+   - Monitor build logs for errors
 
 5. **Verify**:
-   - Visit: https://yourapp.up.railway.app/api/health
+   - Visit: https://your-space.hf.space/api/health
    - Expected: `{"status": "healthy"}`
 
 ---
@@ -1448,7 +1461,7 @@ Before deployment:
    const config = {
      // ...
      customFields: {
-       backendUrl: 'https://yourapp.up.railway.app'
+       backendUrl: 'https://your-space.hf.space'
      }
    };
    ```
@@ -1473,7 +1486,7 @@ Before deployment:
 
 ### Phase 6: Monitoring & Post-Deployment
 
-1. **Monitor Railway logs**:
+1. **Monitor Hugging Face Spaces logs**:
    - Check for errors, rate limit hits
    - Monitor response times
 
@@ -1485,7 +1498,7 @@ Before deployment:
 3. **Monitor API usage**:
    - Gemini: Check request count (max 1500/day)
    - Cohere: Check embedding requests (max 10,000/month)
-   - Railway: Check usage credit (max $5/month)
+   - Hugging Face Spaces: Monitor Space status and uptime
 
 ---
 
@@ -1543,16 +1556,16 @@ Before deployment:
 
 ---
 
-### Risk 5: Railway Free Tier Exhaustion ($5/month)
+### Risk 5: Hugging Face Spaces Cold Start Latency
 
-**Likelihood**: Medium (depends on traffic)
+**Likelihood**: High (free tier Spaces sleep after ~15 min inactivity)
 
-**Impact**: High (backend becomes unavailable)
+**Impact**: Medium (first request after sleep takes 30-60s to wake up)
 
 **Mitigation**:
-- Monitor usage closely (Railway dashboard)
-- Implement aggressive rate limiting (100 req/hour per user)
-- Upgrade to paid tier if needed ($5-20/month)
+- Display "warming up" message to users on first request
+- Implement lightweight keepalive pings (optional, within HF ToS)
+- Upgrade to persistent Spaces if needed ($7/month for CPU basic)
 
 ---
 
@@ -1564,7 +1577,7 @@ Before deployment:
 
 **Mitigation**:
 - Test CORS thoroughly in staging environment
-- Use Railway preview deployments for testing
+- Use Hugging Face Spaces preview for testing
 - Document CORS headers clearly in API docs
 
 ---
@@ -1593,7 +1606,7 @@ Before deployment:
 Post-deployment (Week 1):
 - [ ] 100+ user queries successfully answered
 - [ ] <5% error rate (queries resulting in error messages)
-- [ ] P95 response time <3s (measure via Railway logs)
+- [ ] P95 response time <3s (measure via Hugging Face Spaces logs)
 - [ ] 0 security incidents (XSS, API key leaks)
 - [ ] 90% user satisfaction (inferred from lack of complaints)
 
@@ -1602,7 +1615,7 @@ Post-deployment (Month 1):
 - [ ] <3% error rate
 - [ ] Manual review confirms 95% response accuracy (100 random queries)
 - [ ] 0% hallucinations (no contradictions with book content)
-- [ ] Railway costs remain within $5/month (free tier)
+- [ ] Hugging Face Spaces running on free tier without issues
 
 ---
 
@@ -1612,8 +1625,8 @@ Post-deployment (Month 1):
 1. Create task breakdown using `/sp.tasks` command
 2. Implement in stages (infrastructure → tools → agent → frontend → integration)
 3. Test after each stage (unit → integration → E2E)
-4. Deploy to staging (Railway preview environment)
-5. Deploy to production (Railway main + GitHub Pages)
+4. Deploy to staging (Hugging Face Spaces preview)
+5. Deploy to production (Hugging Face Spaces + GitHub Pages)
 
 **Estimated Timeline**:
 - Stage 1 (Infrastructure): 2-3 days
@@ -1637,14 +1650,14 @@ Post-deployment (Month 1):
 | LLM: Google Gemini (gemini-2.5-flash) | ✅ Decision 1 |
 | Embeddings: Cohere (embed-english-v3.0) | ✅ Decision 2 |
 | Vector DB: Qdrant Cloud Free Tier | ✅ Decision 3 |
-| Backend: FastAPI on Railway | ✅ Architecture Overview |
+| Backend: FastAPI on Hugging Face Spaces | ✅ Architecture Overview |
 | Frontend: React/TypeScript in Docusaurus | ✅ Architecture Overview |
 | Anonymous Users: Browser localStorage | ✅ Decision 4 |
 | Multi-turn: Last 5 messages | ✅ Decision 5 |
 | Text Selection: ≥10 characters | ✅ Decision 6 |
 | Similarity Threshold: 0.7 | ✅ Decision 7 |
 | Rate Limiting: 100 req/hour | ✅ Decision 8 |
-| Security: API keys in env vars, CORS, input sanitization | ✅ Non-Functional Requirements |
+| Security: API keys in HF Spaces Secrets, CORS, input sanitization | ✅ Non-Functional Requirements |
 | Testing: Unit (90%), Integration, E2E | ✅ Testing Strategy |
 | Error Handling: Helpful suggestions, no stack traces | ✅ Architecture Overview (Error Flow) |
 

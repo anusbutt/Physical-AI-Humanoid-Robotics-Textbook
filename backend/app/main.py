@@ -7,11 +7,12 @@ all middleware, routers, and startup/shutdown events.
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from datetime import datetime, timezone
+from datetime import datetime
 import logging
 
 from app.api.chat import router as chat_router, initialize_chat_services
 from app.middleware.error_handler import ErrorHandlerMiddleware
+from app.middleware.rate_limit import RateLimitMiddleware
 
 # Configure logging
 logging.basicConfig(
@@ -30,13 +31,19 @@ app = FastAPI(
 )
 
 # CORS Configuration
-# TODO: Load from environment variables in Phase 1
-CORS_ORIGINS = [
-    "https://anusbutt.github.io",
-    "http://localhost:3000",
-    "http://localhost:3001"
-]
+# Includes GitHub Pages (frontend), Hugging Face Spaces (backend), and local dev
+import os
 
+CORS_ORIGINS = os.getenv("CORS_ORIGINS", "https://anusbutt.github.io,http://localhost:3000,http://localhost:3001").split(",")
+
+# Middleware order (outermost → innermost): CORS → ErrorHandler → RateLimit
+# Add rate limiting middleware (innermost - runs first on request)
+app.add_middleware(RateLimitMiddleware)
+
+# Add error handling middleware
+app.add_middleware(ErrorHandlerMiddleware)
+
+# CORS middleware added LAST (outermost - ensures CORS headers on ALL responses including errors)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=CORS_ORIGINS,
@@ -44,9 +51,6 @@ app.add_middleware(
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"]
 )
-
-# Add error handling middleware (catches exceptions from services)
-app.add_middleware(ErrorHandlerMiddleware)
 
 # Include routers
 app.include_router(chat_router)
@@ -62,7 +66,7 @@ async def health_check():
     """
     return {
         "status": "healthy",
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.utcnow().isoformat(),
         "version": "1.0.0",
         "services": {
             "api": True

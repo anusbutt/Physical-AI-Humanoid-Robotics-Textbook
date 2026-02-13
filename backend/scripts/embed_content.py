@@ -282,10 +282,8 @@ def process_lesson(
                     raise
 
         # Add delay between chunks to respect rate limits
-        # Paid tier: 5 seconds (10,000 calls/month = ~6-7 per minute safe)
-        # Free tier was: 60 seconds (100 calls/month)
         if i + BATCH_SIZE < len(chunk_texts):
-            time.sleep(5)  # 5 seconds for paid tier
+            time.sleep(5)  # 5 seconds between chunks (retry logic handles 429s)
 
     # Upload to Qdrant
     print(f"[INFO] Uploading to Qdrant...")

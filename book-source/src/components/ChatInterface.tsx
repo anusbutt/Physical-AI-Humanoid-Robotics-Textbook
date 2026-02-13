@@ -13,12 +13,13 @@ import styles from './ChatInterface.module.css';
 interface ChatInterfaceProps {
   isOpen: boolean;
   onClose: () => void;
+  initialSelectedText?: string;
 }
 
-export const ChatInterface: React.FC<ChatInterfaceProps> = ({ isOpen, onClose }) => {
+export const ChatInterface: React.FC<ChatInterfaceProps> = ({ isOpen, onClose, initialSelectedText }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { conversation, isLoading, error, sendMessage, clearError, clearConversation } = useChatState();
-  const { selectedText, hasValidSelection, clearSelection } = useTextSelection();
+  const { selectedText, hasValidSelection, clearSelection } = useTextSelection(initialSelectedText);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {

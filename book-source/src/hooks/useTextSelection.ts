@@ -3,7 +3,7 @@
  * Used for "Explain selected text" feature
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { CHAT_CONSTANTS } from '../types/chat';
 
 /**
@@ -32,16 +32,32 @@ function isValidSelection(text: string): boolean {
 
 /**
  * Hook for managing text selection
+ * @param initialText - Optional text captured before the hook mounted (e.g. from Root.tsx on chat open)
  */
-export function useTextSelection() {
-  const [selectedText, setSelectedText] = useState<string>('');
-  const [hasValidSelection, setHasValidSelection] = useState<boolean>(false);
+export function useTextSelection(initialText?: string) {
+  const [selectedText, setSelectedText] = useState<string>(initialText || '');
+  const [hasValidSelection, setHasValidSelection] = useState<boolean>(
+    isValidSelection(initialText || '')
+  );
+  // Track whether we're using an initialText that shouldn't be overwritten by empty browser selection
+  const usingInitialTextRef = useRef<boolean>(isValidSelection(initialText || ''));
 
   /**
-   * Update selection state
+   * Update selection state from browser
    */
   const updateSelection = useCallback(() => {
     const text = getSelectedText();
+
+    // If browser selection is empty but we have initialText, don't overwrite
+    if (!text && usingInitialTextRef.current) {
+      return;
+    }
+
+    // New browser selection made — stop protecting initialText
+    if (text) {
+      usingInitialTextRef.current = false;
+    }
+
     setSelectedText(text);
     setHasValidSelection(isValidSelection(text));
   }, []);
@@ -50,6 +66,7 @@ export function useTextSelection() {
    * Clear selection
    */
   const clearSelection = useCallback(() => {
+    usingInitialTextRef.current = false;
     setSelectedText('');
     setHasValidSelection(false);
 
@@ -61,6 +78,19 @@ export function useTextSelection() {
       }
     }
   }, []);
+
+  /**
+   * Sync when initialText changes (e.g. chat re-opened with new selection)
+   */
+  useEffect(() => {
+    if (initialText && isValidSelection(initialText)) {
+      usingInitialTextRef.current = true;
+      setSelectedText(initialText);
+      setHasValidSelection(true);
+    } else if (!initialText) {
+      usingInitialTextRef.current = false;
+    }
+  }, [initialText]);
 
   /**
    * Listen for selection changes

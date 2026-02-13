@@ -4,15 +4,33 @@
  * Docs: https://docusaurus.io/docs/swizzling#wrapper-your-site-with-root
  */
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ChatInterface } from '../components/ChatInterface';
 import styles from './Root.module.css';
 
 export default function Root({ children }: { children: React.ReactNode }) {
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [initialSelectedText, setInitialSelectedText] = useState<string>('');
+  // Ref to capture selection on mousedown (before browser clears it on click)
+  const capturedSelectionRef = useRef<string>('');
 
-  const openChat = () => setIsChatOpen(true);
-  const closeChat = () => setIsChatOpen(false);
+  const handleMouseDown = () => {
+    // Browser clears selection on mousedown, so capture it HERE
+    const selection = window.getSelection();
+    capturedSelectionRef.current = selection ? selection.toString().trim() : '';
+  };
+
+  const openChat = () => {
+    // Use the text captured during mousedown (selection is already gone by onClick)
+    setInitialSelectedText(capturedSelectionRef.current);
+    capturedSelectionRef.current = '';
+    setIsChatOpen(true);
+  };
+
+  const closeChat = () => {
+    setIsChatOpen(false);
+    setInitialSelectedText('');
+  };
 
   return (
     <>
@@ -21,6 +39,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
       {/* Floating chat button */}
       {!isChatOpen && (
         <button
+          onMouseDown={handleMouseDown}
           onClick={openChat}
           className={styles.floatingChatButton}
           aria-label="Open AI Assistant"
@@ -32,7 +51,11 @@ export default function Root({ children }: { children: React.ReactNode }) {
       )}
 
       {/* Chat interface overlay */}
-      <ChatInterface isOpen={isChatOpen} onClose={closeChat} />
+      <ChatInterface
+        isOpen={isChatOpen}
+        onClose={closeChat}
+        initialSelectedText={initialSelectedText}
+      />
     </>
   );
 }

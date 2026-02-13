@@ -10,22 +10,25 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
     steps:
       - name: Checkout GitHub repo
         uses: actions/checkout@v4
 
       - name: Push backend to HF Space
-        env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           # Configure git
           git config --global user.email "ci@github.com"
           git config --global user.name "GitHub Actions"
 
-          # Configure git to use token for HF
-          git config --global url."https://x-access-token:${HF_TOKEN}@huggingface.co/".insteadOf "https://huggingface.co/"
+          # Create a git askpass helper that returns our token
+          echo '#!/bin/sh' > /tmp/askpass.sh
+          echo 'echo $HF_TOKEN' >> /tmp/askpass.sh
+          chmod +x /tmp/askpass.sh
+          export GIT_ASKPASS=/tmp/askpass.sh
 
-          # Clone HF Space repo
+          # Clone HF Space repo (public read, no auth needed)
           git clone https://huggingface.co/spaces/anusbutt/rag-chatbot hf-space
 
           # Clear old files (keep .git directory)
@@ -36,6 +39,9 @@ jobs:
           cp ../backend/Dockerfile .
           cp ../backend/requirements.txt .
           cp -r ../backend/app ./app
+
+          # Set remote with username (GIT_ASKPASS provides the password)
+          git remote set-url origin https://anusbutt@huggingface.co/spaces/anusbutt/rag-chatbot
 
           # Push to HF Space
           git add .

@@ -22,13 +22,7 @@ jobs:
           git config --global user.email "ci@github.com"
           git config --global user.name "GitHub Actions"
 
-          # Create a git askpass helper that returns our token
-          echo '#!/bin/sh' > /tmp/askpass.sh
-          echo 'echo $HF_TOKEN' >> /tmp/askpass.sh
-          chmod +x /tmp/askpass.sh
-          export GIT_ASKPASS=/tmp/askpass.sh
-
-          # Clone HF Space repo (public read, no auth needed)
+          # Clone HF Space repo (public read)
           git clone https://huggingface.co/spaces/anusbutt/rag-chatbot hf-space
 
           # Clear old files (keep .git directory)
@@ -40,10 +34,9 @@ jobs:
           cp ../backend/requirements.txt .
           cp -r ../backend/app ./app
 
-          # Set remote with username (GIT_ASKPASS provides the password)
-          git remote set-url origin https://anusbutt@huggingface.co/spaces/anusbutt/rag-chatbot
-
-          # Push to HF Space
+          # Commit
           git add .
           git commit -m "Deploy from GitHub Actions - $(date -u +%Y-%m-%dT%H:%M:%SZ)" || echo "No changes"
-          git push origin main
+
+          # Push directly with token in URL (bypass remote)
+          git push "https://anusbutt:${HF_TOKEN}@huggingface.co/spaces/anusbutt/rag-chatbot" main

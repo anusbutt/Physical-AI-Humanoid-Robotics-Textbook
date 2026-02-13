@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI(
     title="Physical AI & Humanoid Robotics RAG Chatbot API",
     description="Retrieval-Augmented Generation chatbot for the Physical AI textbook",
-    version="1.0.0",
+    version="1.1.0",
     docs_url="/docs",
     redoc_url="/redoc"
 )

@@ -22,9 +22,11 @@ jobs:
           git config --global user.email "ci@github.com"
           git config --global user.name "GitHub Actions"
 
-          # Clone using Bearer token header
-          GIT_AUTH="-c http.extraheader=Authorization: Bearer $HF_TOKEN"
-          git $GIT_AUTH clone https://huggingface.co/spaces/anusbutt/rag-chatbot hf-space
+          # Configure git to use token for HF
+          git config --global url."https://x-access-token:${HF_TOKEN}@huggingface.co/".insteadOf "https://huggingface.co/"
+
+          # Clone HF Space repo
+          git clone https://huggingface.co/spaces/anusbutt/rag-chatbot hf-space
 
           # Clear old files (keep .git directory)
           cd hf-space
@@ -35,7 +37,7 @@ jobs:
           cp ../backend/requirements.txt .
           cp -r ../backend/app ./app
 
-          # Push using Bearer token header
+          # Push to HF Space
           git add .
           git commit -m "Deploy from GitHub Actions - $(date -u +%Y-%m-%dT%H:%M:%SZ)" || echo "No changes"
-          git -c http.extraheader="Authorization: Bearer $HF_TOKEN" push origin main
+          git push origin main

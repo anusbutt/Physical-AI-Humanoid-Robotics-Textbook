@@ -76,9 +76,9 @@ def initialize_chat_services():
     rag_service = RAGService(
         cohere_service=cohere_service,
         qdrant_service=qdrant_service,
-        gemini_api_key=settings.gemini_api_key,
-        gemini_base_url=settings.gemini_base_url,
-        gemini_model=settings.gemini_model
+        openrouter_api_key=settings.openrouter_api_key,
+        openrouter_base_url=settings.openrouter_base_url,
+        openrouter_model=settings.openrouter_model
     )
 
     logger.info("Chat services initialized successfully")

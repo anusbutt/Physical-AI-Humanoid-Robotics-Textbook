@@ -18,10 +18,10 @@ class Settings(BaseSettings):
     Required fields will raise ValidationError if missing.
     """
 
-    # Google Gemini Configuration (LLM Provider)
-    gemini_api_key: str
-    gemini_base_url: str = "https://generativelanguage.googleapis.com/v1beta/openai/"
-    gemini_model: str = "gemini-2.5-flash"
+    # OpenRouter Configuration (LLM Provider)
+    openrouter_api_key: str
+    openrouter_base_url: str = "https://openrouter.ai/api/v1"
+    openrouter_model: str = "google/gemini-2.5-flash:free"
 
     # Cohere Configuration (Embeddings Provider)
     cohere_api_key: str
@@ -32,8 +32,8 @@ class Settings(BaseSettings):
     qdrant_api_key: str
     qdrant_collection_name: str = "humanoid_robotics_book"
 
-    # Neon Postgres Configuration
-    neon_database_url: str
+    # Neon Postgres Configuration (optional for Phase 1)
+    neon_database_url: str = ""
 
     # API Configuration
     cors_origins: str = "https://anusbutt.github.io,http://localhost:3000"

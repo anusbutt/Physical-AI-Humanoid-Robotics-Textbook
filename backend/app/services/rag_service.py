@@ -27,9 +27,9 @@ class RAGService:
         self,
         cohere_service: CohereService,
         qdrant_service: QdrantService,
-        gemini_api_key: str,
-        gemini_base_url: str,
-        gemini_model: str = "gemini-2.0-flash-exp"
+        openrouter_api_key: str,
+        openrouter_base_url: str,
+        openrouter_model: str = "google/gemini-2.5-flash:free"
     ):
         """
         Initialize RAG service.
@@ -37,21 +37,25 @@ class RAGService:
         Args:
             cohere_service: Service for generating embeddings
             qdrant_service: Service for vector search
-            gemini_api_key: Gemini API key
-            gemini_base_url: Gemini API base URL
-            gemini_model: Gemini model name
+            openrouter_api_key: OpenRouter API key
+            openrouter_base_url: OpenRouter API base URL
+            openrouter_model: OpenRouter model name (use :free suffix for free models)
         """
         self.cohere = cohere_service
         self.qdrant = qdrant_service
-        self.gemini_model = gemini_model
+        self.llm_model = openrouter_model
 
-        # Initialize Gemini client via OpenAI-compatible API
-        self.gemini_client = AsyncOpenAI(
-            api_key=gemini_api_key,
-            base_url=gemini_base_url
+        # Initialize OpenRouter client via OpenAI-compatible API
+        self.llm_client = AsyncOpenAI(
+            api_key=openrouter_api_key,
+            base_url=openrouter_base_url,
+            default_headers={
+                "HTTP-Referer": "https://anusbutt.github.io",
+                "X-Title": "Physical AI & Humanoid Robotics Chatbot"
+            }
         )
 
-        logger.info(f"RAG service initialized with model: {gemini_model}")
+        logger.info(f"RAG service initialized with OpenRouter model: {openrouter_model}")
 
     async def query(
         self,
@@ -364,9 +368,9 @@ Student Question: {user_query}
 Please provide a helpful answer based on the context above."""
 
         try:
-            # Call Gemini via OpenAI-compatible API
-            response = await self.gemini_client.chat.completions.create(
-                model=self.gemini_model,
+            # Call LLM via OpenRouter (OpenAI-compatible API)
+            response = await self.llm_client.chat.completions.create(
+                model=self.llm_model,
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}

@@ -49,3 +49,9 @@ backend/.mypy_cache/
 backend/.ruff_cache/
 backend/data/extracted_lessons.json
 backend/data/chunks.json
+
+__pycache__/
+*.pyc
+*.pyo
+history/
+.claude/

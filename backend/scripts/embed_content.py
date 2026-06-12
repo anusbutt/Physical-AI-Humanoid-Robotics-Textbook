@@ -335,10 +335,26 @@ def process_module(
     print(f"Processing {get_module_title(module_id)}")
     print(f"{'='*60}")
 
-    # Find all lesson files (exclude .summary.md, quiz, README)
+    # Find all lesson files (exclude .summary.md, quiz, README, capstone sub-files)
     lesson_files = []
     for file in sorted(module_path.glob('*.md')):
-        if '.summary' in file.name or file.name in ['quiz.md', 'README.md']:
+        name = file.name
+        # Skip summary files
+        if '.summary' in name:
+            continue
+        # Skip README
+        if name == 'README.md':
+            continue
+        # Skip quiz files (e.g., 06-quiz.md)
+        if 'quiz' in name.lower():
+            continue
+        # Skip capstone sub-files (e.g., 05-capstone-project.architecture.md, .casestudies.md, .content.md, .code.py, etc.)
+        # Only include the main capstone file (e.g., 05-capstone-project.md)
+        stem = file.stem  # filename without .md
+        if '.' in stem:
+            continue
+        # Skip non-.md files that somehow matched (.py, .yaml etc shouldn't match *.md but just in case)
+        if file.suffix != '.md':
             continue
         lesson_files.append(file)
 

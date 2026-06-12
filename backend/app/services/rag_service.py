@@ -2,7 +2,7 @@
 RAG Service - Retrieval-Augmented Generation
 
 Orchestrates the RAG pipeline: query embedding, vector search,
-context building, and LLM generation with Gemini.
+context building, and LLM generation with OpenRouter.
 """
 
 from typing import List, Dict, Any, Optional
@@ -29,7 +29,7 @@ class RAGService:
         qdrant_service: QdrantService,
         openrouter_api_key: str,
         openrouter_base_url: str,
-        openrouter_model: str = "google/gemini-2.5-flash:free"
+        openrouter_model: str = "openrouter/owl-alpha"
     ):
         """
         Initialize RAG service.
@@ -45,10 +45,12 @@ class RAGService:
         self.qdrant = qdrant_service
         self.llm_model = openrouter_model
 
+        normalized_base_url = self._normalize_openrouter_base_url(openrouter_base_url)
+
         # Initialize OpenRouter client via OpenAI-compatible API
         self.llm_client = AsyncOpenAI(
             api_key=openrouter_api_key,
-            base_url=openrouter_base_url,
+            base_url=normalized_base_url,
             default_headers={
                 "HTTP-Referer": "https://anusbutt.github.io",
                 "X-Title": "Physical AI & Humanoid Robotics Chatbot"
@@ -56,6 +58,30 @@ class RAGService:
         )
 
         logger.info(f"RAG service initialized with OpenRouter model: {openrouter_model}")
+
+    @staticmethod
+    def _normalize_openrouter_base_url(base_url: str) -> str:
+        """
+        Normalize OpenRouter base URL for the OpenAI-compatible client.
+
+        The OpenAI client appends `/chat/completions` to the base URL. If the
+        environment variable contains the full completions endpoint, strip it so
+        OpenRouter receives the correct `/api/v1/chat/completions` path.
+        """
+        normalized = base_url.strip().rstrip("/")
+
+        if not normalized:
+            return "https://openrouter.ai/api/v1"
+
+        completions_suffix = "/chat/completions"
+        if normalized.endswith(completions_suffix):
+            normalized = normalized[: -len(completions_suffix)].rstrip("/")
+            logger.warning(
+                "OpenRouter base URL included /chat/completions; using base URL %s instead",
+                normalized
+            )
+
+        return normalized
 
     async def query(
         self,

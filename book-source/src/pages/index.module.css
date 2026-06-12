@@ -87,11 +87,14 @@
   position: relative;
   z-index: 2;
   max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 /* ── Headline ── */
 .headlineWrapper {
   margin-bottom: 1.5rem;
+  white-space: normal;
 }
 
 .heroTitle {
@@ -105,12 +108,22 @@
 
 .headlineWord {
   display: inline-block;
+  white-space: nowrap;
   background: linear-gradient(135deg, #ffffff 0%, #00d4ff 40%, #a855f7 70%, #ec4899 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   background-size: 200% 200%;
   animation: shimmer 4s ease-in-out infinite;
+}
+
+/* At small screens, stack the headline words centered */
+@media screen and (max-width: 576px) {
+  .headlineWord {
+    display: block;
+    white-space: normal;
+    line-height: 1.15;
+  }
 }
 
 @keyframes shimmer {
@@ -501,9 +514,9 @@
 }
 
 .moduleCard .card__body {
-  flex-grow: 1;
+  flex: 1 1 auto;
   padding: 0;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
 }
 
 .moduleCard .card__body p {
@@ -517,6 +530,7 @@
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   padding-top: 1.5rem;
   margin-top: auto;
+  flex-shrink: 0;
 }
 
 /* ============================================

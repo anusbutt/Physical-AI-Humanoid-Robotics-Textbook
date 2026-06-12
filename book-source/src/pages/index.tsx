@@ -19,8 +19,9 @@ import styles from './index.module.css';
 /* ─── Detect if chat can be opened (browser-only) ─── */
 const isBrowser = typeof window !== 'undefined';
 
-/* ─── Staggered headline animation ─── */
-const headlineWords = ['Physical AI', '&', 'Humanoid Robotics'];
+/* ─── Staggered headline animation ── */
+/* Each "word group" animates together — no awkward mid-group line breaks */
+const headlineWords = ['Physical AI &', 'Humanoid Robotics'];
 
 const containerVariants = {
   hidden: {},

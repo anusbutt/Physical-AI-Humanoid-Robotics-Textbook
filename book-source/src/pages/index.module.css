@@ -1,64 +1,74 @@
 /**
- * Homepage - Premium Futuristic Design
+ * Homepage — Portfolio-Grade Visual Overhaul
  * Electric Cyan & Deep Space Theme
+ * GPU-accelerated animations (transform/opacity only)
  */
 
 /* ============================================
-   Hero Section - Immersive Experience
+   Hero Section
    ============================================ */
 .heroBanner {
-  padding: 8rem 2rem;
+  padding: 6rem 2rem 4rem;
   text-align: center;
   position: relative;
   overflow: hidden;
-  min-height: 90vh;
+  min-height: 92vh;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Animated starfield background */
-.heroBanner::before {
-  content: '';
+/* Particle canvas */
+.particleCanvas {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-image:
-    radial-gradient(2px 2px at 20px 30px, rgba(0, 212, 255, 0.8), transparent),
-    radial-gradient(2px 2px at 40px 70px, rgba(168, 85, 247, 0.6), transparent),
-    radial-gradient(1px 1px at 90px 40px, rgba(255, 255, 255, 0.5), transparent),
-    radial-gradient(2px 2px at 130px 80px, rgba(0, 212, 255, 0.6), transparent),
-    radial-gradient(1px 1px at 160px 120px, rgba(255, 255, 255, 0.4), transparent);
-  background-size: 200px 200px;
-  animation: starsMove 100s linear infinite;
-  opacity: 0.6;
-}
-
-@keyframes starsMove {
-  from { transform: translateY(0); }
-  to { transform: translateY(-200px); }
-}
-
-/* Central glowing orb */
-.heroBanner::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 800px;
-  height: 800px;
-  background: radial-gradient(circle, rgba(0, 212, 255, 0.12) 0%, rgba(168, 85, 247, 0.08) 30%, transparent 70%);
-  transform: translate(-50%, -50%);
-  animation: orbPulse 6s ease-in-out infinite;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
   pointer-events: none;
+}
+
+/* Gradient orbs */
+.heroOrb {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(
+    circle,
+    rgba(0, 212, 255, 0.1) 0%,
+    rgba(168, 85, 247, 0.06) 30%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  animation: orbPulse 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.heroOrb2 {
+  position: absolute;
+  top: 60%;
+  left: 30%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(
+    circle,
+    rgba(168, 85, 247, 0.08) 0%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  animation: orbPulse 10s ease-in-out infinite reverse;
+  pointer-events: none;
+  z-index: 0;
 }
 
 @keyframes orbPulse {
   0%, 100% {
     transform: translate(-50%, -50%) scale(1);
-    opacity: 0.8;
+    opacity: 0.7;
   }
   50% {
     transform: translate(-50%, -50%) scale(1.15);
@@ -66,31 +76,135 @@
   }
 }
 
-/* Floating grid lines */
+@media (prefers-reduced-motion: reduce) {
+  .heroOrb,
+  .heroOrb2 {
+    animation: none;
+  }
+}
+
 .heroContent {
   position: relative;
   z-index: 2;
+  max-width: 900px;
 }
 
+/* ── Headline ── */
+.headlineWrapper {
+  margin-bottom: 1.5rem;
+}
+
+.heroTitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.headlineWord {
+  display: inline-block;
+  background: linear-gradient(135deg, #ffffff 0%, #00d4ff 40%, #a855f7 70%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 200%;
+  animation: shimmer 4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .headlineWord {
+    animation: none;
+  }
+}
+
+/* ── Subtitle ── */
+.heroSubtitle {
+  font-size: clamp(1.1rem, 2.2vw, 1.45rem);
+  color: var(--ifm-font-color-secondary, #94a3b8);
+  font-weight: 400;
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.6;
+}
+
+.subtitleBreak {
+  display: none;
+}
+
+.subtitleAccent {
+  color: var(--ifm-color-primary, #00d4ff);
+  font-weight: 500;
+}
+
+/* ── CTA Buttons ── */
 .buttons {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.5rem;
-  margin-top: 3rem;
+  gap: 1.25rem;
+  margin-top: 2rem;
   position: relative;
   z-index: 2;
+  flex-wrap: wrap;
+}
+
+/* ── Conversation Demo ── */
+.demoSection {
+  margin-top: 3.5rem;
+}
+
+/* ── Tech Stack Badges ── */
+.techBadges {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.techBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50px;
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: default;
+  transition: all 0.2s ease;
+  will-change: transform;
+}
+
+.techBadge:hover {
+  border-color: rgba(0, 212, 255, 0.3);
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(0, 212, 255, 0.06);
+}
+
+.badgeIcon {
+  font-size: 0.9rem;
 }
 
 /* ============================================
-   Stats Bar - Premium Feature
+   Stats Bar
    ============================================ */
 .statsBar {
   display: flex;
   justify-content: center;
   gap: 4rem;
-  margin-top: 4rem;
-  padding: 2rem;
+  margin-top: 2.5rem;
+  padding: 1.5rem;
   position: relative;
   z-index: 2;
 }
@@ -101,7 +215,7 @@
 
 .statNumber {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 700;
   background: linear-gradient(135deg, #00d4ff 0%, #a855f7 100%);
   -webkit-background-clip: text;
@@ -112,19 +226,132 @@
 
 .statLabel {
   color: #94a3b8;
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  margin-top: 0.375rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
 
 /* ============================================
-   Modules Section - Premium Cards
+   Timeline Section
+   ============================================ */
+.timelineSection {
+  padding: 6rem 2rem;
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 212, 255, 0.015) 50%,
+    transparent 100%
+  );
+}
+
+.timeline {
+  position: relative;
+  max-width: 700px;
+  margin: 3rem auto 0;
+  padding-left: 2rem;
+}
+
+.timelineLine {
+  position: absolute;
+  left: 1.25rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(0, 212, 255, 0.4) 10%,
+    rgba(168, 85, 247, 0.4) 90%,
+    transparent
+  );
+  transform-origin: top;
+}
+
+.timelineItem {
+  position: relative;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+.timelineNode {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 212, 255, 0.2) 0%,
+    rgba(168, 85, 247, 0.2) 100%
+  );
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 50%;
+  position: relative;
+  z-index: 1;
+}
+
+.timelineNumber {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #00d4ff;
+}
+
+.timelineCard {
+  flex: 1;
+  display: block;
+  padding: 1.25rem 1.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  text-decoration: none !important;
+  transition: all 0.3s ease;
+}
+
+.timelineCard:hover {
+  border-color: rgba(0, 212, 255, 0.2);
+  transform: translateX(4px);
+  background: rgba(255, 255, 255, 0.04);
+  text-decoration: none !important;
+}
+
+.timelineCard h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0.25rem 0 0.375rem;
+}
+
+.timelineCard p {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.timelineIcon {
+  font-size: 1.25rem;
+}
+
+/* ============================================
+   Modules Section
    ============================================ */
 .modules {
-  padding: 8rem 2rem;
+  padding: 6rem 2rem;
   position: relative;
-  background: linear-gradient(180deg, transparent 0%, rgba(0, 212, 255, 0.02) 50%, transparent 100%);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 212, 255, 0.02) 50%,
+    transparent 100%
+  );
 }
 
 .modules::before {
@@ -134,12 +361,18 @@
   left: 10%;
   right: 10%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.4), rgba(168, 85, 247, 0.4), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 212, 255, 0.4),
+    rgba(168, 85, 247, 0.4),
+    transparent
+  );
 }
 
 .sectionHeader {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: 3.5rem;
 }
 
 .sectionBadge {
@@ -167,7 +400,7 @@
 
 .sectionSubtitle {
   color: #94a3b8;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.7;
@@ -193,7 +426,6 @@
   overflow: hidden;
 }
 
-/* Card gradient border effect */
 .moduleCard .card::before {
   content: '';
   position: absolute;
@@ -206,7 +438,6 @@
   transition: opacity 0.3s ease;
 }
 
-/* Card shine effect */
 .moduleCard .card::after {
   content: '';
   position: absolute;
@@ -235,14 +466,17 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
-/* Module number badge */
 .moduleNumber {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, rgba(0, 212, 255, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(0, 212, 255, 0.2) 0%,
+    rgba(168, 85, 247, 0.2) 100%
+  );
   border: 1px solid rgba(0, 212, 255, 0.3);
   border-radius: 14px;
   font-family: 'Space Grotesk', sans-serif;
@@ -286,10 +520,10 @@
 }
 
 /* ============================================
-   Features Section - Premium Grid
+   Features Section
    ============================================ */
 .features {
-  padding: 8rem 2rem;
+  padding: 6rem 2rem;
   position: relative;
   background: rgba(0, 0, 0, 0.3);
 }
@@ -301,11 +535,22 @@
   left: 10%;
   right: 10%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.3), rgba(168, 85, 247, 0.3), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 212, 255, 0.3),
+    rgba(168, 85, 247, 0.3),
+    transparent
+  );
 }
 
-.features::before { top: 0; }
-.features::after { bottom: 0; }
+.features::before {
+  top: 0;
+}
+
+.features::after {
+  bottom: 0;
+}
 
 .featureCard {
   text-align: center;
@@ -314,34 +559,54 @@
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 20px;
-  transition: all 0.3s ease;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.featureCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.5), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .featureCard:hover {
   border-color: rgba(0, 212, 255, 0.2);
-  transform: translateY(-6px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  transform: translateY(-8px);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 30px rgba(0, 212, 255, 0.08);
+}
+
+.featureCard:hover::before {
+  opacity: 1;
 }
 
 .featureIcon {
-  font-size: 3rem;
-  margin-bottom: 1.5rem;
+  font-size: 2.5rem;
+  margin-bottom: 1.25rem;
   display: block;
 }
 
 .featureCard h3 {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.3rem;
+  font-size: 1.15rem;
   font-weight: 600;
   color: #ffffff;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .featureCard p {
   color: #94a3b8;
   line-height: 1.7;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 /* ============================================
@@ -387,8 +652,8 @@
    ============================================ */
 @media screen and (max-width: 996px) {
   .heroBanner {
-    padding: 6rem 1.5rem;
-    min-height: 80vh;
+    padding: 5rem 1.5rem 3rem;
+    min-height: 85vh;
   }
 
   .buttons {
@@ -399,6 +664,15 @@
   .statsBar {
     flex-direction: column;
     gap: 2rem;
+  }
+
+  .techBadges {
+    gap: 0.5rem;
+  }
+
+  .techBadge {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
   }
 
   .modules {
@@ -412,12 +686,24 @@
   .sectionTitle {
     font-size: 2rem;
   }
+
+  .timeline {
+    padding-left: 1.5rem;
+  }
+
+  .timelineLine {
+    left: 1rem;
+  }
 }
 
 @media screen and (max-width: 576px) {
   .heroBanner {
-    padding: 4rem 1rem;
-    min-height: 70vh;
+    padding: 4rem 1rem 2.5rem;
+    min-height: 80vh;
+  }
+
+  .subtitleBreak {
+    display: block;
   }
 
   .moduleCard .card {
@@ -426,5 +712,18 @@
 
   .featureCard {
     padding: 2rem 1.5rem;
+  }
+
+  .timelineItem {
+    gap: 0.75rem;
+  }
+
+  .timelineNode {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .timelineNumber {
+    font-size: 0.75rem;
   }
 }

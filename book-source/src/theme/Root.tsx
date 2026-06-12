@@ -4,7 +4,7 @@
  * Docs: https://docusaurus.io/docs/swizzling#wrapper-your-site-with-root
  */
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ChatInterface } from '../components/ChatInterface';
 import styles from './Root.module.css';
 
@@ -13,6 +13,15 @@ export default function Root({ children }: { children: React.ReactNode }) {
   const [initialSelectedText, setInitialSelectedText] = useState<string>('');
   // Ref to capture selection on mousedown (before browser clears it on click)
   const capturedSelectionRef = useRef<string>('');
+
+  // Listen for the "Try the AI Tutor" CTA from the landing page
+  useEffect(() => {
+    const handler = () => {
+      setIsChatOpen(true);
+    };
+    window.addEventListener('open-chat-demo', handler);
+    return () => window.removeEventListener('open-chat-demo', handler);
+  }, []);
 
   const handleMouseDown = () => {
     // Browser clears selection on mousedown, so capture it HERE

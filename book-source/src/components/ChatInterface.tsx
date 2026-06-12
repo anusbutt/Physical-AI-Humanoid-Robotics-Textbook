@@ -1,11 +1,14 @@
 /**
- * ChatInterface component - Main chat interface container
+ * ChatInterface component — Main chat interface container
  * Brings together all chat components and manages state
+ * Added: enhanced animations, shared TypingDots, smooth auto-scroll
  */
 
 import React, { useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
+import { TypingDots } from './TypingDots';
 import { useChatState } from '../hooks/useChatState';
 import { useTextSelection } from '../hooks/useTextSelection';
 import styles from './ChatInterface.module.css';
@@ -16,10 +19,22 @@ interface ChatInterfaceProps {
   initialSelectedText?: string;
 }
 
-export const ChatInterface: React.FC<ChatInterfaceProps> = ({ isOpen, onClose, initialSelectedText }) => {
+export const ChatInterface: React.FC<ChatInterfaceProps> = ({
+  isOpen,
+  onClose,
+  initialSelectedText,
+}) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { conversation, isLoading, error, sendMessage, clearError, clearConversation } = useChatState();
-  const { selectedText, hasValidSelection, clearSelection } = useTextSelection(initialSelectedText);
+  const {
+    conversation,
+    isLoading,
+    error,
+    sendMessage,
+    clearError,
+    clearConversation,
+  } = useChatState();
+  const { selectedText, hasValidSelection, clearSelection } =
+    useTextSelection(initialSelectedText);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -36,12 +51,19 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ isOpen, onClose, i
     }
   }, [error, clearError]);
 
-  const handleSendMessage = async (query: string, selectedText?: string | null) => {
+  const handleSendMessage = async (
+    query: string,
+    selectedText?: string | null
+  ) => {
     await sendMessage(query, selectedText);
   };
 
   const handleNewConversation = () => {
-    if (window.confirm('Start a new conversation? Current conversation will be cleared.')) {
+    if (
+      window.confirm(
+        'Start a new conversation? Current conversation will be cleared.'
+      )
+    ) {
       clearConversation();
       clearSelection();
     }
@@ -50,13 +72,27 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ isOpen, onClose, i
   if (!isOpen) return null;
 
   return (
-    <div className={styles.overlay}>
-      <div className={styles.chatContainer}>
+    <motion.div
+      className={styles.overlay}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+    >
+      <motion.div
+        className={styles.chatContainer}
+        initial={{ transform: 'translateY(30px) scale(0.97)', opacity: 0 }}
+        animate={{ transform: 'translateY(0) scale(1)', opacity: 1 }}
+        exit={{ transform: 'translateY(30px) scale(0.97)', opacity: 0 }}
+        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] as const }}
+      >
         {/* Header */}
         <div className={styles.header}>
           <div className={styles.headerTitle}>
             <h2>AI Assistant</h2>
-            <p className={styles.subtitle}>Physical AI & Humanoid Robotics</p>
+            <p className={styles.subtitle}>
+              Physical AI & Humanoid Robotics
+            </p>
           </div>
           <div className={styles.headerActions}>
             <button
@@ -78,19 +114,27 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ isOpen, onClose, i
         </div>
 
         {/* Error banner */}
-        {error && (
-          <div className={styles.errorBanner}>
-            <strong>Error:</strong> {error.error}
-            {error.detail && <span> - {error.detail}</span>}
-            <button
-              onClick={clearError}
-              className={styles.errorDismiss}
-              aria-label="Dismiss error"
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              className={styles.errorBanner}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
             >
-              ✕
-            </button>
-          </div>
-        )}
+              <strong>Error:</strong> {error.error}
+              {error.detail && <span> — {error.detail}</span>}
+              <button
+                onClick={clearError}
+                className={styles.errorDismiss}
+                aria-label="Dismiss error"
+              >
+                ✕
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Selected text notice */}
         {hasValidSelection && (
@@ -122,13 +166,10 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ isOpen, onClose, i
             <ChatMessage key={index} message={message} />
           ))}
 
-          {/* Typing indicator */}
+          {/* Typing indicator — animated shared component */}
           {isLoading && (
             <div className={styles.typingIndicator}>
-              <span className={styles.typingDot} />
-              <span className={styles.typingDot} />
-              <span className={styles.typingDot} />
-              <span className={styles.typingLabel}>AI is thinking...</span>
+              <TypingDots compact label="AI is thinking..." />
             </div>
           )}
 
@@ -155,7 +196,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ isOpen, onClose, i
             </span>
           )}
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };

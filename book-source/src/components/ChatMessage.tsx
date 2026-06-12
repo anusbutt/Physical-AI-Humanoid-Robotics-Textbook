@@ -1,9 +1,11 @@
 /**
- * ChatMessage component - Displays individual chat messages
+ * ChatMessage component — Displays individual chat messages
  * Shows user queries and assistant responses with sources
+ * Added: Framer Motion entrance animation
  */
 
 import React from 'react';
+import { motion } from 'motion/react';
 import type { Message } from '../types/chat';
 import styles from './ChatMessage.module.css';
 
@@ -15,7 +17,12 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   const isUser = message.role === 'user';
 
   return (
-    <div className={`${styles.message} ${isUser ? styles.userMessage : styles.assistantMessage}`}>
+    <motion.div
+      className={`${styles.message} ${isUser ? styles.userMessage : styles.assistantMessage}`}
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] as const }}
+    >
       <div className={styles.messageHeader}>
         <span className={styles.role}>
           {isUser ? 'You' : 'AI Assistant'}
@@ -51,7 +58,8 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
               {message.sources.map((source, index) => (
                 <li key={index} className={styles.sourceItem}>
                   <span className={styles.sourceLocation}>
-                    {source.module} → {source.lesson} → {source.section}
+                    {source.module} → {source.lesson}
+                    {source.section ? ` → ${source.section}` : ''}
                   </span>
                   {source.similarity_score && (
                     <span className={styles.similarityScore}>
@@ -64,6 +72,6 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };

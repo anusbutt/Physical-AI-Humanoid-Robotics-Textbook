@@ -28,7 +28,7 @@ class QdrantService:
             api_key: Qdrant API key
             collection_name: Name of the collection to use
         """
-        self.client = QdrantClient(url=url, api_key=api_key)
+        self.client = QdrantClient(url=url, api_key=api_key, prefer_grpc=False, check_compatibility=False)
         self.collection_name = collection_name
         logger.info(f"Qdrant service initialized for collection: {collection_name}")
 

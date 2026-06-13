@@ -9,7 +9,7 @@
 ### An AI-Powered Interactive Learning Platform
 
 [![GitHub Pages](https://img.shields.io/badge/Live_Site-GitHub_Pages-2ea44f?style=for-the-badge&logo=github)](https://anusbutt.github.io/Physical-AI-Humanoid-Robotics-Textbook/)
-[![Backend](https://img.shields.io/badge/API-Hugging_Face_Spaces-FFD21E?style=for-the-badge&logo=huggingface)](https://huggingface.co/spaces)
+[![Backend](https://img.shields.io/badge/API-Hugging_Face_Spaces-FFD21E?style=for-the-badge&logo=huggingface)](https://huggingface.co/spaces/anusbutt/rag-chatbot)
 [![Built with Docusaurus](https://img.shields.io/badge/Built_with-Docusaurus_v3-3ECC5F?style=for-the-badge&logo=docusaurus)](https://docusaurus.io/)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
 
@@ -19,7 +19,7 @@
 
 <br />
 
-[Explore the Textbook](https://anusbutt.github.io/Physical-AI-Humanoid-Robotics-Textbook/) · [Report Bug](https://github.com/anusbutt/hackathon-phase-01/issues) · [Request Feature](https://github.com/anusbutt/hackathon-phase-01/issues)
+[Explore the Textbook](https://anusbutt.github.io/Physical-AI-Humanoid-Robotics-Textbook/) · [Report Bug](https://github.com/anusbutt/Physical-AI-Humanoid-Robotics-Textbook/issues) · [Request Feature](https://github.com/anusbutt/Physical-AI-Humanoid-Robotics-Textbook/issues)
 
 </div>
 
@@ -78,13 +78,13 @@ Each lesson follows a structured format: **Concept → Why It Matters → Key Pr
 │  │   │ MDX Docs │  │ AI Chat UI   │  │ Text      │  │  │
 │  │   │ (4 mods) │  │ (ChatInterface│  │ Selection │  │  │
 │  │   │          │  │  + hooks)    │  │ Hook      │  │  │
-│  │   └──────────┘  └──────┬───────┘  └───────────┘  │  │
-│  └─────────────────────────┼─────────────────────────┘  │
-└────────────────────────────┼────────────────────────────┘
+│  │   └──────────┘  └──────┬───────┘  └─────────────┘  │  │
+│  └────────────────────────┼────────────────────────────┘  │
+└────────────────────────────┼───────────────────────────────┘
                              │ REST API
                              ▼
 ┌─────────────────────────────────────────────────────────┐
-│               FastAPI Backend (Docker)                   │
+│          FastAPI Backend (Hugging Face Spaces)           │
 │                                                          │
 │   ┌──────────┐    ┌──────────┐    ┌──────────────────┐  │
 │   │ Rate     │───▶│ RAG      │───▶│ Gemini 2.5 Flash │  │
@@ -97,7 +97,7 @@ Each lesson follows a structured format: **Concept → Why It Matters → Key Pr
 │   │ Cohere Embeddings│  │  Qdrant Cloud  │              │
 │   │ (v3.0 / 1024d)  │  │ (Vector Store) │              │
 │   └──────────────────┘  └────────────────┘              │
-└──────────────────────────────────────────────────────────┘
+└─────────────────────────────────────────────────────────┘
 ```
 
 <br />
@@ -129,8 +129,8 @@ Each lesson follows a structured format: **Concept → Why It Matters → Key Pr
 ### Run the Frontend
 
 ```bash
-git clone https://github.com/anusbutt/hackathon-phase-01.git
-cd hackathon-phase-01/book-source
+git clone https://github.com/anusbutt/Physical-AI-Humanoid-Robotics-Textbook.git
+cd Physical-AI-Humanoid-Robotics-Textbook/book-source
 npm install
 npm start
 ```
@@ -166,7 +166,7 @@ API docs at [http://localhost:7860/docs](http://localhost:7860/docs).
 ## Project Structure
 
 ```
-hackathon-phase-01/
+Physical-AI-Humanoid-Robotics-Textbook/
 ├── book-source/                    # Docusaurus frontend
 │   ├── docs/                       # MDX textbook content (4 modules)
 │   ├── src/
@@ -184,8 +184,8 @@ hackathon-phase-01/
 │   │   │   ├── cohere_service.py   # Embedding generation
 │   │   │   └── qdrant_service.py   # Vector search
 │   │   ├── middleware/             # Rate limiting, error handling
-│   │   ├── models/schemas.py      # Pydantic data models
-│   │   └── config/settings.py     # Environment configuration
+│   │   ├── models/schemas.py       # Pydantic data models
+│   │   └── config/settings.py      # Environment configuration
 │   ├── Dockerfile
 │   └── requirements.txt
 │
@@ -193,8 +193,7 @@ hackathon-phase-01/
 │   ├── deploy.yml                  # Frontend → GitHub Pages
 │   └── deploy-hf-space.yml        # Backend → Hugging Face Spaces
 │
-├── specs/                          # Feature specifications (SDD)
-└── history/                        # Prompt History Records
+└── specs/                          # Feature specifications (SDD)
 ```
 
 <br />
@@ -214,7 +213,7 @@ This project follows **Spec-Driven Development (SDD)**:
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
+3. Commit your changes (`git commit -m 'Add amazing-feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
@@ -222,13 +221,15 @@ This project follows **Spec-Driven Development (SDD)**:
 
 ## Team
 
-**Panaversity Hackathon Team**
+**Developer:** Anus Butt
+
+Originally built for Panaversity Hackathon.
 
 <br />
 
 ## License
 
-This project is part of the Panaversity Hackathon. See [LICENSE](LICENSE) for details.
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 

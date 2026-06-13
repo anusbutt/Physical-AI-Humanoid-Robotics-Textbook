@@ -27,6 +27,9 @@ lerna-debug.log*
 *.swo
 *~
 
+# SpecKit scaffolding
+.specify/
+
 # OS
 Thumbs.db
 

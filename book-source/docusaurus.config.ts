@@ -29,8 +29,7 @@ const config: Config = {
 
   // Custom fields for RAG chatbot backend URL
   customFields: {
-    // Railway production backend (deployed January 3, 2026)
-    backendUrl: 'https://virtuous-creativity-production.up.railway.app',
+    backendUrl: 'https://anusbutt-rag-chatbot.hf.space',
   },
 
   // Even if you don't use internationalization, you can use this field to set

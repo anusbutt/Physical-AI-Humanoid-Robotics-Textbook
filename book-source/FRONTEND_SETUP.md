@@ -1,4 +1,4 @@
-# Frontend Setup Guide - Phase 9: Chat Interface
+# Frontend Setup Guide
 
 ## Overview
 
@@ -74,7 +74,7 @@ cd book-source
 npm start
 ```
 
-The site will open at http://localhost:3000
+The site will open at http://localhost:3000.
 
 ### 5. Test Chat Interface
 
@@ -93,8 +93,8 @@ The site will open at http://localhost:3000
 
 ### GitHub Pages (Frontend)
 
-The frontend is already deployed at:
-https://anusbutt.github.io/hackathon-phase-01/
+The frontend is deployed at:
+https://anusbutt.github.io/Physical-AI-Humanoid-Robotics-Textbook/
 
 To update:
 
@@ -106,23 +106,17 @@ npm run deploy
 
 ### Backend URL Configuration
 
-After deploying backend to Railway (Phase 8), update the backend URL:
-
-**Option 1: Environment Variable (Recommended)**
-
-Set in GitHub Pages deployment settings or CI/CD:
+The production backend runs on Hugging Face Spaces:
 
 ```bash
-REACT_APP_BACKEND_URL=https://your-app.railway.app
+REACT_APP_BACKEND_URL=https://anusbutt-rag-chatbot.hf.space
 ```
 
-**Option 2: Update docusaurus.config.ts**
-
-Edit `book-source/docusaurus.config.ts`:
+The committed Docusaurus configuration also points to this URL in `book-source/docusaurus.config.ts`:
 
 ```typescript
 customFields: {
-  backendUrl: 'https://your-app.railway.app',
+  backendUrl: 'https://anusbutt-rag-chatbot.hf.space',
 },
 ```
 
@@ -167,9 +161,9 @@ Then rebuild and redeploy.
 ### "Failed to connect to backend"
 
 1. Check backend is running on port 8001
-2. Verify REACT_APP_BACKEND_URL is correct
+2. Verify `REACT_APP_BACKEND_URL` is correct
 3. Check browser console for CORS errors
-4. Ensure backend CORS_ORIGINS includes frontend URL
+4. Ensure backend `CORS_ORIGINS` includes frontend URL
 
 ### Chat button not appearing
 
@@ -218,41 +212,3 @@ Content-Type: application/json
 
 - Chrome/Edge: ✅ Fully supported
 - Firefox: ✅ Fully supported
-- Safari: ✅ Fully supported
-- Mobile browsers: ✅ Responsive design
-
-## Performance
-
-- Initial load: ~200KB (gzipped)
-- Chat interface lazy-loaded on button click
-- LocalStorage used for conversation persistence (no database needed)
-- API calls debounced to prevent spam
-
-## Security
-
-- Backend URL configurable (not hardcoded)
-- No secrets in frontend code
-- CORS protection on backend
-- Rate limiting on backend (100 req/min)
-- Input validation (1-2000 characters)
-
-## Next Steps
-
-1. **Complete Phase 8**: Deploy backend to Railway
-2. **Update Backend URL**: Set REACT_APP_BACKEND_URL to Railway URL
-3. **Test End-to-End**: Verify chat works with production backend
-4. **Monitor Usage**: Check Railway logs for errors
-5. **Iterate**: Gather user feedback and improve
-
-## Related Documentation
-
-- **Backend Setup**: `backend/README.md`
-- **Railway Deployment**: `backend/RAILWAY_DEPLOYMENT.md`
-- **Cross-Module Search**: `backend/CROSS_MODULE_SEARCH.md`
-- **Deployment Checklist**: `backend/DEPLOYMENT_CHECKLIST.md`
-
----
-
-**Phase 9 Status**: ✅ Complete
-
-**Last Updated**: 2026-01-02

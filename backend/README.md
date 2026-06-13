@@ -9,7 +9,7 @@ Backend API for the Physical AI & Humanoid Robotics book chatbot.
 - **Embeddings**: Cohere (embed-english-v3.0)
 - **Vector DB**: Qdrant Cloud Free Tier
 - **Database**: Neon Serverless Postgres
-- **Deployment**: Railway
+- **Deployment**: Hugging Face Spaces
 
 ## Quick Start (Phase 0 - Local Development)
 

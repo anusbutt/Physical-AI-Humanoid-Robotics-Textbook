@@ -48,5 +48,4 @@ scripts/add_test_data.py
 # Documentation (not needed at runtime)
 README.md
 SETUP_GUIDE.md
-RAILWAY_DEPLOYMENT.md
 CROSS_MODULE_SEARCH.md

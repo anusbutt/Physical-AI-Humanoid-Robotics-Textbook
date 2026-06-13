@@ -5,12 +5,12 @@
 ```
 GitHub Pages (Frontend)          Hugging Face Spaces (Backend)
 anusbutt.github.io/        -->  anusbutt-rag-chatbot.hf.space
-  hackathon-phase-01/               |
-  Docusaurus static site            FastAPI + Docker
+  Physical-AI-Humanoid-            |
+  Robotics-Textbook/         FastAPI + Docker
                                     |
                               +-----+-----+
                               |     |     |
-                           Qdrant Cohere Gemini
+                           Qdrant Cohere OpenRouter
                            Cloud  API    API
 ```
 
@@ -18,7 +18,7 @@ anusbutt.github.io/        -->  anusbutt-rag-chatbot.hf.space
 
 ### Prerequisites
 - Hugging Face account
-- API keys: Gemini, Cohere, Qdrant Cloud, Neon Postgres
+- API keys: OpenRouter, Cohere, Qdrant Cloud, Neon Postgres
 
 ### Step 1: Create HF Space
 1. Go to https://huggingface.co/spaces
@@ -31,9 +31,9 @@ In Space Settings > Repository Secrets, add:
 
 | Secret | Description |
 |--------|-------------|
-| `GEMINI_API_KEY` | Google Gemini API key |
-| `GEMINI_BASE_URL` | `https://generativelanguage.googleapis.com/v1beta/openai/` |
-| `GEMINI_MODEL` | `gemini-2.5-flash` |
+| `OPENROUTER_API_KEY` | OpenRouter API key |
+| `OPENROUTER_BASE_URL` | `https://openrouter.ai/api/v1` |
+| `OPENROUTER_MODEL` | e.g. `openrouter/owl-alpha` |
 | `COHERE_API_KEY` | Cohere API key |
 | `COHERE_EMBEDDING_MODEL` | `embed-english-v3.0` |
 | `QDRANT_URL` | Qdrant Cloud cluster URL |
@@ -84,7 +84,7 @@ Frontend auto-deploys via GitHub Actions on push to `main`. The backend URL is c
 
 | Service | Limit |
 |---------|-------|
-| Gemini | 1,500 req/day |
+| OpenRouter | Varies by model (free models: ~20 req/min, 200/day) |
 | Cohere | 10,000 embeddings/month |
 | Qdrant Cloud | 1GB storage, auto-pause after inactivity |
 | Neon Postgres | 0.5GB storage |

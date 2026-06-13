@@ -61,7 +61,7 @@ description: "Task list for Phase 2 RAG Chatbot implementation"
   - mypy (type checker)
 
 - [ ] **T004** Create `.env.example` with required environment variables
-  - GEMINI_API_KEY, GEMINI_BASE_URL, GEMINI_MODEL
+  - OPENROUTER_API_KEY, OPENROUTER_BASE_URL, OPENROUTER_MODEL
   - COHERE_API_KEY, COHERE_EMBEDDING_MODEL
   - QDRANT_URL, QDRANT_API_KEY, QDRANT_COLLECTION_NAME
   - NEON_DATABASE_URL
@@ -140,9 +140,9 @@ description: "Task list for Phase 2 RAG Chatbot implementation"
   - Delete test data
 
 - [ ] **T015** Get API keys for external services
-  - Google Gemini API key (https://aistudio.google.com/app/apikey)
+  - OpenRouter API key (https://openrouter.ai/keys)
   - Cohere API key (https://dashboard.cohere.com/api-keys)
-  - Add to `.env`: GEMINI_API_KEY, COHERE_API_KEY
+  - Add to `.env`: OPENROUTER_API_KEY, COHERE_API_KEY
 
 ### Core Services Implementation
 
@@ -274,10 +274,10 @@ description: "Task list for Phase 2 RAG Chatbot implementation"
   - Format results: [{content, score, module, lesson, section}, ...]
   - Return empty list if no results (trigger error handling)
 
-- [ ] **T032** [US1] Initialize Gemini LLM with OpenAI Agents SDK `backend/app/agents/chatbot_agent.py`
+- [ ] **T032** [US1] Initialize OpenRouter LLM with OpenAI Agents SDK `backend/app/agents/chatbot_agent.py`
   - Import: `from agents import Agent, Runner, OpenAIChatCompletionsModel, AsyncOpenAI`
-  - Create AsyncOpenAI client with GEMINI_API_KEY and GEMINI_BASE_URL
-  - Create OpenAIChatCompletionsModel with model="gemini-2.5-flash"
+  - Create AsyncOpenAI client with OPENROUTER_API_KEY and OPENROUTER_BASE_URL
+  - Create OpenAIChatCompletionsModel with model="openrouter/owl-alpha"
   - Define system prompt (educational tone, cite sources, accurate)
 
 - [ ] **T033** [US1] Create agent with search_book_content tool `backend/app/agents/chatbot_agent.py`
@@ -302,13 +302,13 @@ description: "Task list for Phase 2 RAG Chatbot implementation"
   - Catch all exceptions
   - Return user-friendly error messages (no stack traces)
   - Log errors to Hugging Face Spaces logs
-  - Return HTTP 503 for external API failures (Gemini, Qdrant, Cohere)
+  - Return HTTP 503 for external API failures (OpenRouter, Qdrant, Cohere)
 
 ### Integration Tests for User Story 1
 
 - [ ] **T037** [P] [US1] Integration test for chat endpoint `backend/tests/integration/test_api.py::test_chat_query_success`
   - Use TestClient (httpx)
-  - POST /api/chat/query with real Qdrant + real Gemini
+  - POST /api/chat/query with real Qdrant + real OpenRouter
   - Verify response contains "response", "sources", "conversation_id"
   - Verify sources[0] has module and lesson fields
 
@@ -416,7 +416,7 @@ description: "Task list for Phase 2 RAG Chatbot implementation"
 - [ ] **T049** [US5] Add API error handling `backend/app/middleware/error_handler.py`
   - Catch QdrantException → Return HTTP 503: "Search is temporarily unavailable"
   - Catch CohereException → Return HTTP 503: "Embedding service unavailable"
-  - Catch Gemini API errors → Return HTTP 429: "Too many requests. Please wait." or HTTP 503: "Chatbot temporarily unavailable"
+  - Catch LLM errors → Return HTTP 429: "Too many requests. Please wait." or HTTP 503: "Chatbot temporarily unavailable"
 
 ### Integration Tests for User Story 5
 
@@ -471,7 +471,7 @@ description: "Task list for Phase 2 RAG Chatbot implementation"
 - [ ] **T055** Configure Hugging Face Spaces Secrets
   - Navigate to Space Settings → Secrets
   - Add all variables from `.env.example`:
-  - GEMINI_API_KEY, COHERE_API_KEY, QDRANT_URL, QDRANT_API_KEY, NEON_DATABASE_URL
+  - OPENROUTER_API_KEY, COHERE_API_KEY, QDRANT_URL, QDRANT_API_KEY, NEON_DATABASE_URL
   - CORS_ORIGINS=https://anusbutt.github.io,https://your-space.hf.space,http://localhost:3000
   - API_RATE_LIMIT=100
 
@@ -489,7 +489,7 @@ description: "Task list for Phase 2 RAG Chatbot implementation"
 
 - [ ] **T058** Verify Hugging Face Spaces deployment
   - Visit `https://your-space.hf.space/api/health`
-  - Expected: `{"status": "healthy", "services": {"qdrant": true, "gemini": true, "cohere": true}}`
+  - Expected: `{"status": "healthy", "services": {"qdrant": true, "llm": true, "cohere": true}}`
   - Test chat endpoint with curl: `curl -X POST https://your-space.hf.space/api/chat/query -H "Content-Type: application/json" -d '{"query": "What is ROS2?"}'`
 
 **Checkpoint**: Backend deployed to Hugging Face Spaces and accessible via public URL
@@ -761,7 +761,7 @@ description: "Task list for Phase 2 RAG Chatbot implementation"
 
 - [ ] **T094** Monitor Hugging Face Spaces logs
   - Check for errors, warnings
-  - Verify request counts (should be <1500/day for Gemini free tier)
+  - Verify request counts (varies by OpenRouter model)
   - Monitor Cohere usage (should be <10,000/month)
   - Monitor Space uptime and cold start behavior
 

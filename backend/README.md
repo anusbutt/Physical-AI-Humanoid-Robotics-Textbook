@@ -5,7 +5,7 @@ Backend API for the Physical AI & Humanoid Robotics book chatbot.
 ## Technology Stack
 
 - **Framework**: FastAPI (Python 3.11+)
-- **LLM**: Google Gemini (gemini-2.5-flash) via OpenAI Agents SDK
+- **LLM**: OpenRouter
 - **Embeddings**: Cohere (embed-english-v3.0)
 - **Vector DB**: Qdrant Cloud Free Tier
 - **Database**: Neon Serverless Postgres
@@ -65,7 +65,7 @@ Health check should return:
 
 After Phase 0 validation:
 - Create `.env` file from `.env.example`
-- Add API keys (Gemini, Cohere, Qdrant, Neon)
+- Add API keys (OpenRouter, Cohere, Qdrant, Neon)
 - Initialize external services
 
 ## Project Structure
@@ -81,7 +81,7 @@ backend/
 │   │   ├── schemas.py           # Pydantic request/response models
 │   │   └── entities.py          # Domain entities
 │   ├── agents/
-│   │   └── chatbot_agent.py     # OpenAI Agent with Gemini
+│   │   └── chatbot_agent.py     # OpenAI Agent with OpenRouter
 │   ├── tools/
 │   │   ├── search_content.py    # Qdrant search tool
 │   │   ├── selected_text.py     # Selected text context tool

@@ -7,7 +7,7 @@ This guide walks you through setting up external services for the RAG chatbot.
 - Completed Phase 0 (backend structure created)
 - Python virtual environment activated
 
-## Step 1: Get Google Gemini API Key (T015)
+## Step 1: Get OpenRouter API Key (T015)
 
 ### Instructions
 
@@ -28,9 +28,9 @@ cp .env.example .env
 Edit `.env` and add:
 
 ```
-GEMINI_API_KEY=your-actual-api-key-here
-GEMINI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/
-GEMINI_MODEL=gemini-2.5-flash
+OPENROUTER_API_KEY=your-actual-api-key-here
+OPENROUTER_BASE_URL=https://openrouter.ai/api/v1
+OPENROUTER_MODEL=openrouter/owl-alpha
 ```
 
 ---
@@ -208,9 +208,9 @@ API_RATE_LIMIT=100
 
 After completing all steps, your `.env` file should have:
 
-- [x] GEMINI_API_KEY
-- [x] GEMINI_BASE_URL
-- [x] GEMINI_MODEL
+- [x] OPENROUTER_API_KEY
+- [x] OPENROUTER_BASE_URL
+- [x] OPENROUTER_MODEL
 - [x] COHERE_API_KEY
 - [x] COHERE_EMBEDDING_MODEL
 - [x] QDRANT_URL

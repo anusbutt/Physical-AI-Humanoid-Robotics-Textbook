@@ -16,7 +16,7 @@ Build and embed a Retrieval-Augmented Generation (RAG) chatbot within the publis
 4. **Store conversation history** in browser localStorage (7-day expiry) for anonymous users
 
 **Technical Approach**:
-- **LLM**: Google Gemini (gemini-2.5-flash) via OpenAI Agents SDK with custom tools
+- **LLM**: OpenRouter via OpenAI Agents SDK with custom tools
 - **Embeddings**: Cohere (embed-english-v3.0) for semantic content vectors
 - **Vector DB**: Qdrant Cloud Free Tier for RAG content retrieval
 - **Backend**: FastAPI (Python 3.11+) deployed to Hugging Face Spaces (Docker SDK)
@@ -53,12 +53,12 @@ Build and embed a Retrieval-Augmented Generation (RAG) chatbot within the publis
 **Performance Goals**:
 - Response time: <3 seconds (95th percentile) end-to-end
 - Qdrant search: <500ms (95th percentile)
-- Gemini LLM: <2 seconds (95th percentile)
+- OpenRouter: <2 seconds (95th percentile)
 - Concurrent users: 50+ without degradation
 - Chat interface load: <1 second to interactive
 
 **Constraints**:
-- Gemini API: 15 requests/min, 1500/day (free tier)
+- OpenRouter: 15 requests/min, 1500/day (free tier)
 - Cohere API: 100 calls/min, 10,000/month (free tier)
 - Qdrant Cloud: 1GB storage (free tier)
 - Hugging Face Spaces: Free tier (2 vCPU, 16GB RAM, Docker SDK, port 7860)
@@ -81,7 +81,7 @@ Build and embed a Retrieval-Augmented Generation (RAG) chatbot within the publis
 
 | Principle | Status | Evidence |
 |-----------|--------|----------|
-| I. Integrated RAG Architecture | ✅ PASS | Uses mandated tech stack: OpenAI Agents SDK, Gemini LLM, Cohere embeddings, FastAPI, Qdrant Cloud Free Tier, Neon Postgres, Hugging Face Spaces |
+| I. Integrated RAG Architecture | ✅ PASS | Uses mandated tech stack: OpenAI Agents SDK, OpenRouter, Cohere embeddings, FastAPI, Qdrant Cloud Free Tier, Neon Postgres, Hugging Face Spaces |
 | II. Tool-Based Data Retrieval | ✅ PASS | Plan includes 5 custom tools with `@function_tool` decorator: search_book_content, get_selected_text_context, get_lesson_metadata, get_user_profile, save_conversation |
 | III. Pure RAG Implementation | ✅ PASS | Qdrant Cloud for vectors (no OpenAI vector storage), Cohere embeddings, chunking strategy defined (500-1000 tokens, H2/H3 sections) |
 | IV. Frontend-Backend Integration | ✅ PASS | React components (ChatInterface.tsx, TextSelectionHandler.tsx), API endpoints defined, SSE streaming planned |
@@ -99,7 +99,7 @@ Build and embed a Retrieval-Augmented Generation (RAG) chatbot within the publis
 ✅ **Deployment Strategy Compliance**:
 - Backend: Hugging Face Spaces (Docker SDK) ✅
 - Frontend: GitHub Pages (embedded in Docusaurus) ✅
-- Environment variables: GEMINI_API_KEY, COHERE_API_KEY, QDRANT_API_KEY, NEON_DATABASE_URL ✅
+- Environment variables: OPENROUTER_API_KEY, COHERE_API_KEY, QDRANT_API_KEY, NEON_DATABASE_URL ✅
 - Auto-deploy: GitHub Actions for frontend, Hugging Face Spaces GitHub integration for backend ✅
 
 **No violations found. Constitution compliance: PASS**
@@ -144,7 +144,7 @@ hackathon-phase-01/
 │   │   │   └── entities.py           # Domain entities (Conversation, Message, Source)
 │   │   ├── agents/
 │   │   │   ├── __init__.py
-│   │   │   ├── chatbot_agent.py      # OpenAI Agent initialization with Gemini
+│   │   │   ├── chatbot_agent.py      # OpenAI Agent initialization with OpenRouter
 │   │   │   └── agent_config.py       # Agent system prompts and instructions
 │   │   ├── tools/
 │   │   │   ├── __init__.py
@@ -270,7 +270,7 @@ hackathon-phase-01/
 │                            ↓                                     │
 │  ┌────────────────────────────────────────────────────────────┐ │
 │  │  OpenAI Agent (agents/)                                    │ │
-│  │  - Gemini 2.5 Flash LLM (via AsyncOpenAI)                 │ │
+│  │  - OpenRouter LLM (via AsyncOpenAI)                 │ │
 │  │  - Custom Tools (@function_tool):                          │ │
 │  │    1. search_book_content                                  │ │
 │  │    2. get_selected_text_context                            │ │
@@ -306,7 +306,7 @@ hackathon-phase-01/
    ↓
 3. FastAPI receives request, validates input (Pydantic)
    ↓
-4. Initialize OpenAI Agent with Gemini LLM + 5 custom tools
+4. Initialize OpenAI Agent with OpenRouter LLM + 5 custom tools
    ↓
 5. Agent analyzes query, decides to call search_book_content tool
    ↓
@@ -317,7 +317,7 @@ hackathon-phase-01/
    ↓
 7. Agent receives retrieved chunks as tool output
    ↓
-8. Agent generates response using Gemini LLM with:
+8. Agent generates response using OpenRouter LLM with:
    - User query
    - Retrieved chunks (context)
    - Conversation history (last 5 messages)
@@ -380,15 +380,15 @@ hackathon-phase-01/
 
 ## Key Architectural Decisions
 
-### Decision 1: OpenAI Agents SDK with Gemini LLM
+### Decision 1: OpenAI Agents SDK with OpenRouter
 
-**Choice**: Use OpenAI Agents SDK for orchestration, but Google Gemini (gemini-2.5-flash) as the LLM provider via AsyncOpenAI client.
+**Choice**: Use OpenAI Agents SDK for orchestration, but OpenRouter as the LLM provider via AsyncOpenAI client.
 
 **Rationale**:
 - OpenAI Agents SDK provides robust tool orchestration, automatic tool calling, and conversation management
-- Gemini 2.5 Flash offers cost-effective, fast responses (free tier: 15 req/min)
-- AsyncOpenAI client provides OpenAI-compatible interface for Gemini API
-- Decouples agent framework (OpenAI SDK) from LLM provider (Gemini), allowing future swaps
+- OpenRouter offers cost-effective, fast responses (free tier: 15 req/min)
+- AsyncOpenAI client provides OpenAI-compatible interface for OpenRouter API
+- Decouples agent framework (OpenAI SDK) from LLM provider (OpenRouter), allowing future swaps
 
 **Alternatives Considered**:
 - Native Google AI SDK: Less mature tool-calling support, would require custom orchestration
@@ -400,12 +400,12 @@ hackathon-phase-01/
 from agents import Agent, OpenAIChatCompletionsModel, AsyncOpenAI
 
 client = AsyncOpenAI(
-    api_key=os.getenv("GEMINI_API_KEY"),
+    api_key=os.getenv("OPENROUTER_API_KEY"),
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
 )
 
 llm_model = OpenAIChatCompletionsModel(
-    model="gemini-2.5-flash",
+    model="openrouter/owl-alpha",
     openai_client=client
 )
 
@@ -564,7 +564,7 @@ function loadConversation(): Message[] {
 
 **Rationale**:
 - Balances context retention with token limits
-- Gemini 2.5 Flash: ~1M token context, but smaller context = faster + cheaper
+- OpenRouter: ~1M token context, but smaller context = faster + cheaper
 - 5 messages ≈ 2.5 turns (user + assistant) ≈ ~1000 tokens (estimate)
 - Prevents "context dilution" (older messages less relevant)
 - Matches common chatbot UX patterns
@@ -672,7 +672,7 @@ if len(results) == 0:
 
 **Rationale**:
 - Prevents abuse (spamming, DoS attacks)
-- Protects free tier API limits (Gemini: 1500/day, Cohere: 10,000/month)
+- Protects free tier API limits (OpenRouter: varies by model, Cohere: 10,000/month)
 - 100/hour ≈ 1.66/min (reasonable for educational Q&A)
 - Session-based (not IP-based) to support shared networks (e.g., university wifi)
 
@@ -826,7 +826,7 @@ class ChatFeedbackRequest(BaseModel):
 ```python
 class HealthResponse(BaseModel):
     status: Literal["healthy", "degraded", "unhealthy"]
-    services: dict[str, bool]  # {"qdrant": True, "gemini": True, "cohere": True}
+    services: dict[str, bool]  # {"qdrant": True, "llm": True, "cohere": True}
     timestamp: datetime
 ```
 
@@ -1119,7 +1119,7 @@ def save_conversation(
   - Frontend → Backend: <100ms (network)
   - Query embedding (Cohere): <200ms
   - Qdrant search: <500ms (P95)
-  - Agent processing (Gemini LLM): <2s (P95)
+  - Agent processing (OpenRouter): <2s (P95)
   - Backend → Frontend: <100ms (network)
 
 **Concurrency**:
@@ -1169,7 +1169,7 @@ def save_conversation(
 ### Reliability
 
 **Error Recovery**:
-- Retry logic for transient API failures (Gemini, Cohere, Qdrant)
+- Retry logic for transient API failures (OpenRouter, Cohere, Qdrant)
 - Graceful degradation when Qdrant is down (show error message, suggest offline FAQ)
 - Health check endpoint for deployment verification
 
@@ -1198,7 +1198,7 @@ def save_conversation(
 - Database: Upgrade Neon Postgres to paid tier
 
 **API Rate Limit Management**:
-- Gemini: 15 req/min → Use request queue, show "Please wait" to users
+- OpenRouter: rate limits vary by model → Use request queue, show "Please wait" to users
 - Cohere: 100 req/min → Only used for query embeddings (should never hit limit)
 - Qdrant: No limit (managed service scales automatically)
 
@@ -1435,7 +1435,7 @@ Before deployment:
    ```
 
 3. **Configure Hugging Face Spaces Secrets** (Settings → Secrets):
-   - GEMINI_API_KEY
+   - OPENROUTER_API_KEY
    - COHERE_API_KEY
    - QDRANT_URL
    - QDRANT_API_KEY
@@ -1496,7 +1496,7 @@ Before deployment:
    - Verify CORS works (no console errors)
 
 3. **Monitor API usage**:
-   - Gemini: Check request count (max 1500/day)
+   - OpenRouter: Check request count against model limits
    - Cohere: Check embedding requests (max 10,000/month)
    - Hugging Face Spaces: Monitor Space status and uptime
 
@@ -1504,7 +1504,7 @@ Before deployment:
 
 ## Risks & Mitigation
 
-### Risk 1: Gemini API Rate Limit Exhaustion
+### Risk 1: OpenRouter Rate Limit Exhaustion
 
 **Likelihood**: Medium (15 req/min = 900/hour, but concurrent users may spike)
 
@@ -1647,7 +1647,7 @@ Post-deployment (Month 1):
 
 | Requirement | Compliance |
 |-------------|-----------|
-| LLM: Google Gemini (gemini-2.5-flash) | ✅ Decision 1 |
+| LLM: OpenRouter | ✅ Decision 1 |
 | Embeddings: Cohere (embed-english-v3.0) | ✅ Decision 2 |
 | Vector DB: Qdrant Cloud Free Tier | ✅ Decision 3 |
 | Backend: FastAPI on Hugging Face Spaces | ✅ Architecture Overview |

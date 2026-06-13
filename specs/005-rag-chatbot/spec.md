@@ -3,7 +3,7 @@
 **Feature Branch**: `005-rag-chatbot`
 **Created**: 2025-12-30
 **Status**: Draft
-**Input**: Build and embed a Retrieval-Augmented Generation (RAG) chatbot within the published book. This chatbot, utilizing the OpenAI Agents SDK with Google Gemini, FastAPI, Neon Serverless Postgres database, and Qdrant Cloud Free Tier, must be able to answer user questions about the book's content, including answering questions based only on text selected by the user.
+**Input**: Build and embed a Retrieval-Augmented Generation (RAG) chatbot within the published book. This chatbot, utilizing the OpenAI Agents SDK with OpenRouter, FastAPI, Neon Serverless Postgres database, and Qdrant Cloud Free Tier, must be able to answer user questions about the book's content, including answering questions based only on text selected by the user.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -113,7 +113,7 @@ A student asks "How do I install ROS2 on Windows?", which is outside the book's 
 
 4. **Given** a student's query results in a Qdrant error (service down), **When** the backend catches the exception, **Then** it returns HTTP 503 with message: "The chatbot is temporarily unavailable. Please try again in a moment."
 
-5. **Given** a student's query results in a Gemini API error (rate limit), **When** the backend catches the exception, **Then** it returns HTTP 429 with message: "Too many requests. Please wait a moment and try again."
+5. **Given** a student's query results in an OpenRouter API error (rate limit), **When** the backend catches the exception, **Then** it returns HTTP 429 with message: "Too many requests. Please wait a moment and try again."
 
 6. **Given** a student asks a question that matches content from incomplete lessons (e.g., quizzes without answers), **When** the chatbot retrieves those chunks, **Then** it filters them out and only returns substantive lesson content
 
@@ -183,7 +183,7 @@ A student uses the chatbot without creating an account. Their conversation histo
   - Oldest conversations are deleted (FIFO) until new conversation fits
 
 **API Errors:**
-- What happens when Gemini API returns a 500 error?
+- What happens when OpenRouter API returns a 500 error?
   - Backend catches exception, logs error, returns HTTP 503 to frontend with user-friendly message
 
 - What happens when Neon Postgres is unreachable?
@@ -221,7 +221,7 @@ A student uses the chatbot without creating an account. Their conversation histo
 
 **Core Chat Functionality:**
 - **FR-001**: System MUST accept text queries from users via a chat interface embedded in Docusaurus lesson pages
-- **FR-002**: System MUST generate responses using Google Gemini (gemini-2.5-flash) via OpenAI Agents SDK within 3 seconds (95th percentile)
+- **FR-002**: System MUST generate responses using OpenRouter via OpenAI Agents SDK within 3 seconds (95th percentile)
 - **FR-003**: System MUST retrieve semantically relevant content from Qdrant Cloud using Cohere embeddings (embed-english-v3.0)
 - **FR-004**: System MUST include source citations in responses (format: "Source: Module X: Module Name - Lesson Y: Lesson Name")
 - **FR-005**: System MUST support queries up to 2000 characters in length
@@ -247,7 +247,7 @@ A student uses the chatbot without creating an account. Their conversation histo
 **Error Handling & Edge Cases:**
 - **FR-018**: System MUST suggest alternative questions or related lessons when no content matches the query (similarity <0.7 for all chunks)
 - **FR-019**: System MUST recognize out-of-scope queries (e.g., installation instructions, non-robotics topics) and politely decline with suggestions
-- **FR-020**: System MUST return user-friendly error messages when external APIs (Gemini, Qdrant, Neon) fail
+- **FR-020**: System MUST return user-friendly error messages when external APIs (OpenRouter, Qdrant, Neon) fail
 - **FR-021**: System MUST sanitize all user inputs to prevent SQL injection, XSS, and other security vulnerabilities
 - **FR-022**: System MUST validate query length and reject queries exceeding 2000 characters with HTTP 400
 
@@ -255,7 +255,7 @@ A student uses the chatbot without creating an account. Their conversation histo
 - **FR-023**: System MUST enforce rate limit of 100 requests per hour per user (tracked by session ID for anonymous users)
 - **FR-024**: System MUST respond to rate-limited requests with HTTP 429 and "Retry-After" header
 - **FR-025**: System MUST complete Qdrant searches within 500ms (95th percentile)
-- **FR-026**: System MUST complete Gemini LLM calls within 2 seconds (95th percentile)
+- **FR-026**: System MUST complete OpenRouter LLM calls within 2 seconds (95th percentile)
 
 **Frontend Integration:**
 - **FR-027**: System MUST render chat interface as a fixed bottom-right floating widget on all lesson pages
@@ -273,7 +273,7 @@ A student uses the chatbot without creating an account. Their conversation histo
 
 **Deployment & Environment:**
 - **FR-037**: Backend MUST be deployed to Hugging Face Spaces (Docker SDK) with auto-deploy from GitHub repository
-- **FR-038**: System MUST use environment variables for all secrets (GEMINI_API_KEY, COHERE_API_KEY, QDRANT_API_KEY, NEON_DATABASE_URL)
+- **FR-038**: System MUST use environment variables for all secrets (OPENROUTER_API_KEY, COHERE_API_KEY, QDRANT_API_KEY, NEON_DATABASE_URL)
 - **FR-039**: System MUST log all queries, responses, and errors to Hugging Face Spaces logs for monitoring
 - **FR-040**: System MUST expose metrics endpoint (optional) for monitoring response times and error rates
 
@@ -332,7 +332,7 @@ A student uses the chatbot without creating an account. Their conversation histo
 
 **Error Handling Success:**
 - **SC-011**: 100% of out-of-scope queries receive helpful error messages with suggestions (not generic "error" messages)
-- **SC-012**: 100% of API failures (Gemini, Qdrant, Neon down) result in user-friendly error messages, not stack traces
+- **SC-012**: 100% of API failures (OpenRouter, Qdrant, Neon down) result in user-friendly error messages, not stack traces
 - **SC-013**: System gracefully handles and recovers from 100% of tested edge cases (empty query, oversized query, special characters, etc.)
 
 **Security & Reliability Success:**
@@ -348,7 +348,7 @@ A student uses the chatbot without creating an account. Their conversation histo
 **Deployment Success:**
 - **SC-020**: Backend deploys to Hugging Face Spaces successfully from GitHub main branch with 0 manual interventions
 - **SC-021**: Frontend deploys to GitHub Pages with embedded chat interface visible on all lesson pages
-- **SC-022**: All environment variables (GEMINI_API_KEY, COHERE_API_KEY, QDRANT_API_KEY) are configured in Hugging Face Spaces Secrets without being committed to git
+- **SC-022**: All environment variables (OPENROUTER_API_KEY, COHERE_API_KEY, QDRANT_API_KEY) are configured in Hugging Face Spaces Secrets without being committed to git
 
 ---
 
@@ -399,7 +399,7 @@ A student uses the chatbot without creating an account. Their conversation histo
 ## Technical Constraints
 
 **API Rate Limits:**
-- Google Gemini Free Tier: 15 requests per minute, 1500 requests per day
+- OpenRouter Free Tier: Varies by model (~20 req/min, 200/day)
 - Cohere Free Tier: 100 API calls per minute, 10,000 per month
 - Qdrant Cloud Free Tier: 1GB storage, unlimited queries
 - Neon Postgres Free Tier: 0.5GB storage (not heavily used in Phase 2)
@@ -423,7 +423,7 @@ A student uses the chatbot without creating an account. Their conversation histo
 ## Dependencies
 
 **External Services:**
-- Google Gemini API (LLM provider)
+- OpenRouter API (LLM provider)
 - Cohere API (embeddings provider)
 - Qdrant Cloud (vector database)
 - Neon Serverless Postgres (user data, minimal usage in Phase 2)
@@ -446,7 +446,7 @@ A student uses the chatbot without creating an account. Their conversation histo
 ## Open Questions
 
 **None** - All major decisions have been documented in the constitution and confirmed:
-- LLM provider: Gemini 2.5 Flash ✅
+- LLM provider: OpenRouter ✅
 - Embeddings: Cohere embed-english-v3.0 ✅
 - Deployment: Hugging Face Spaces (Docker SDK) ✅
 - Authentication: Anonymous-only ✅
@@ -461,7 +461,7 @@ A student uses the chatbot without creating an account. Their conversation histo
 ## Risk Analysis
 
 **High-Risk Items:**
-1. **Gemini API Rate Limits**: 15 requests/min may be insufficient for concurrent users
+1. **OpenRouter API Rate Limits**: Rate limits vary by model and may be insufficient for concurrent users
    - Mitigation: Implement request queuing and user-facing rate limit messages
 
 2. **Cohere Free Tier Exhaustion**: 10,000 calls/month could be consumed during embedding generation
@@ -524,9 +524,9 @@ Before marking this feature as complete, verify:
 
 This specification aligns with the following constitutional principles:
 
-✅ **Phase 2 Goal**: Addresses all requirements (RAG chatbot, OpenAI Agents SDK, Gemini LLM, Cohere embeddings, Qdrant Cloud, Neon Postgres, text selection feature)
+✅ **Phase 2 Goal**: Addresses all requirements (RAG chatbot, OpenAI Agents SDK, OpenRouter, Cohere embeddings, Qdrant Cloud, Neon Postgres, text selection feature)
 
-✅ **Integrated RAG Architecture**: Uses specified tech stack (Gemini, Cohere, FastAPI, Qdrant, Neon, Hugging Face Spaces)
+✅ **Integrated RAG Architecture**: Uses specified tech stack (OpenRouter, Cohere, FastAPI, Qdrant, Neon, Hugging Face Spaces)
 
 ✅ **Tool-Based Data Retrieval**: Spec defines 5 custom tools (search_book_content, get_selected_text_context, get_lesson_metadata, get_user_profile, save_conversation)
 

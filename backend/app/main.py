@@ -70,7 +70,7 @@ async def health_check():
         "version": "1.0.0",
         "services": {
             "api": True
-            # TODO: Add Qdrant, Gemini, Cohere health checks in Phase 1
+            # TODO: Add Qdrant, OpenRouter, Cohere health checks in Phase 1
         }
     }
 
@@ -90,7 +90,7 @@ async def startup_event():
     logger.info("[STARTUP] RAG Chatbot API starting up...")
     logger.info("[STARTUP] CORS enabled for: %s", CORS_ORIGINS)
 
-    # Initialize chat services (RAG, Gemini, Cohere, Qdrant)
+    # Initialize chat services (RAG, OpenRouter, Cohere, Qdrant)
     try:
         initialize_chat_services()
         logger.info("[STARTUP] Chat services initialized successfully")

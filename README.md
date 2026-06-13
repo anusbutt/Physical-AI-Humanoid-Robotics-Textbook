@@ -87,7 +87,7 @@ Each lesson follows a structured format: **Concept → Why It Matters → Key Pr
 │          FastAPI Backend (Hugging Face Spaces)           │
 │                                                          │
 │   ┌──────────┐    ┌──────────┐    ┌──────────────────┐  │
-│   │ Rate     │───▶│ RAG      │───▶│ Gemini 2.5 Flash │  │
+│   │ Rate     │───▶│ RAG      │───▶│ OpenRouter       │  │
 │   │ Limiter  │    │ Service  │    │ (LLM Generation) │  │
 │   └──────────┘    └────┬─────┘    └──────────────────┘  │
 │                        │                                 │
@@ -109,7 +109,7 @@ Each lesson follows a structured format: **Concept → Why It Matters → Key Pr
 | **Frontend** | Docusaurus v3 + React 19 | Static site generation, interactive UI |
 | **Language** | TypeScript 5.6 / Python 3.11+ | Type-safe frontend & backend |
 | **Backend** | FastAPI | Async REST API for RAG pipeline |
-| **LLM** | Google Gemini 2.5 Flash | Response generation |
+| **LLM** | OpenRouter | Response generation |
 | **Embeddings** | Cohere embed-english-v3.0 | 1024-dim semantic vectors |
 | **Vector DB** | Qdrant Cloud | Similarity search over textbook chunks |
 | **Database** | Neon Serverless Postgres | Conversation storage |
@@ -143,7 +143,7 @@ Opens at [http://localhost:3000](http://localhost:3000).
 cd backend
 
 # Create .env with required keys (see .env.example)
-# GEMINI_API_KEY, COHERE_API_KEY, QDRANT_URL, QDRANT_API_KEY, NEON_DATABASE_URL
+# OPENROUTER_API_KEY, COHERE_API_KEY, QDRANT_URL, QDRANT_API_KEY, NEON_DATABASE_URL
 
 pip install -r requirements.txt
 uvicorn app.main:app --reload --port 7860
@@ -237,6 +237,6 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 
 **[Explore the Textbook](https://anusbutt.github.io/Physical-AI-Humanoid-Robotics-Textbook/)**
 
-Built with Docusaurus, FastAPI, Gemini, Cohere & Qdrant
+Built with Docusaurus, FastAPI, OpenRouter, Cohere & Qdrant
 
 </div>
